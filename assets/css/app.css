@@ -885,7 +885,11 @@ input[type="range"]::-moz-range-thumb {
 }
 
 @media (max-width: 620px) {
-  .countries { display: none; }
+  .brand-txt { display: none; }
+  .countries { display: flex; flex: 1 1 auto; gap: 0; }
+  .country { padding: 4px 7px; font-size: 12px; }
+  .country small { display: none; }
+  .ghost-btn { display: none; }
   .panel { max-height: 34vh; }
   .modes .mode { padding: 5px 10px; font-size: 11px; }
   .stage-title h1 { font-size: 20px; }

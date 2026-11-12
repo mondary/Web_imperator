@@ -5,6 +5,24 @@ modification ; la version courante est le premier titre ci-dessous.
 
 ---
 
+## v2026.11.10 — 2026-11-12
+
+**Neuf atlas supplémentaires** — l'application couvre désormais onze empires.
+
+- **Royaume-Uni** (46 territoires) : Irlande 753 ans, Inde, Canada, Australie, Afrique, Mandats,
+  points d'appui (Bermudes 414 ans).
+- **Espagne** (28) : Nouvelle-Espagne, vice-royautés andines, Philippines 333 ans, Pays-Bas,
+  Sahara, Guinée.
+- **Portugal** (14) : Guinée 528 ans, Cap-Vert 513, Mozambique 470, Goa 451, Macao 442, Brésil 322.
+- **Russie** (18) : de Kazan à l'URSS, Asie centrale, Caucase, Baltes, Finlande, Alaska.
+- **Pays-Bas** (12) : Indonésie 347 ans, Suriname, Le Cap, Ceylan, Antilles.
+- **Empire ottoman** (24) : Balkans, Levant, Égypte, Maghreb, Arabie, Crimée.
+- **Allemagne** (23) : colonies africaines et océaniennes, Alsace-Moselle, occupations 1939-1945.
+- **Italie** (8) : Érythrée, Somalie, Libye, Éthiopie, Albanie, Dodécanèse.
+- **Japon** (11) : Taïwan, Corée, Mandchourie, occupations de 1942-1945, mandats du Pacifique.
+- Sélecteur à onze pays, défilant sur mobile ; « Méthode » propre à chaque pays.
+- Marqueurs ponctuels masqués quand le polygone est assez grand pour être vu.
+
 ## v2026.11.9 — 2026-11-12
 
 - Libellés de carte masqués sous 640 px (sauf le territoire sélectionné) : plus de collision sur mobile.

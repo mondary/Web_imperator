@@ -5,8 +5,9 @@
 # Imperator — Le monde français
 
 **Un planisphère interactif : combien d'années chaque territoire du monde a-t-il passé sous
-souveraineté française ?** Deux atlas en ligne : **la France** (73 territoires, de 843 à aujourd'hui) et **les États-Unis**
-(21 territoires, de 1776 à aujourd'hui), avec un curseur temporel et des fiches sourcées.
+souveraineté française ?** **Onze atlas en ligne** : France, États-Unis, Royaume-Uni, Espagne, Portugal, Russie, Pays-Bas,
+Empire ottoman, Allemagne, Italie, Japon — 340 territoires au total, un curseur temporel et des
+fiches sourcées.
 
 ![Vue cumulée](screenshots/01-cumul.png)
 
@@ -23,9 +24,9 @@ souveraineté française ?** Deux atlas en ligne : **la France** (73 territoires
 - **Cadrage automatique** — la carte se resserre sur la France au IXe siècle et s'élargit au
   planisphère à mesure que l'empire colonial s'étend ; le zoom manuel reprend la main.
 - **Fiches par territoire** — périodes détaillées, nombres d'années par période, note critique, lien source.
-- **Deux pays, un moteur** — `?pays=usa` bascule sur les États-Unis : les acquisitions (Louisiane,
-  cession mexicaine, Alaska, Hawaï…), l'empire d'outre-mer et les interventions. Chaque pays a ses
-  propres classes de couleur, sa méthode et son vocabulaire.
+- **Onze pays, un moteur** — `?pays=royaume-uni`, `?pays=ottoman`, `?pays=russie`… Chaque atlas a
+  ses territoires, ses classes de couleur, sa méthode et son vocabulaire. Le sélecteur du bandeau
+  bascule d'un empire à l'autre sans rechargement de code.
 - **Recherche et filtres** par région, liste classée, barres comparatives.
 - **Carte navigable** — zoom molette, déplacement, recentrage automatique sur un territoire.
 - **Liens partageables** — `?an=1789` ouvre une date, `?t=algerie` une fiche, `#methode` la note
@@ -84,6 +85,8 @@ assets/
   js/app.js              moteur : projection, carte, chronologie, panneau
   js/data/france.js      ★ données France
   js/data/usa.js         ★ données États-Unis
+  js/data/royaume-uni.js, espagne.js, portugal.js, russie.js,
+  pays-bas.js, ottoman.js, allemagne.js, italie.js, japon.js
   js/data/index.js       registre des pays
   data/world.geo.json    contours Natural Earth 50m (683 Ko) + provinces françaises
   vendor/                d3-selection, d3-array, d3-geo (copies locales)

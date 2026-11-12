@@ -5,8 +5,9 @@
 # Imperator — The French World
 
 **An interactive planisphere: how many years did each territory in the world spend under French
-sovereignty?** Two atlases online: **France** (73 territories, from 843) and the **United States** (21 territories,
-from 1776), with a time cursor and sourced profiles.
+sovereignty?** **Eleven atlases online**: France, United States, United Kingdom, Spain, Portugal, Russia,
+Netherlands, Ottoman Empire, Germany, Italy, Japan — 340 territories in all, with a time cursor and
+sourced profiles.
 
 ![Cumulative view](screenshots/01-cumul.png)
 
@@ -22,9 +23,9 @@ from 1776), with a time cursor and sourced profiles.
 - **Automatic framing** — the map closes in on France in the 9th century and widens to the whole
   planisphere as the colonial empire grows; manual zoom takes over at any time.
 - **Profiles per territory** — detailed periods, years per period, a critical note, a source link.
-- **Two countries, one engine** — `?pays=usa` switches to the United States: the acquisitions
-  (Louisiana, Mexican Cession, Alaska, Hawaii…), the overseas empire and the interventions. Each
-  country has its own colour classes, method text and wording.
+- **Eleven countries, one engine** — `?pays=royaume-uni`, `?pays=ottoman`, `?pays=russie`… Each
+  atlas has its own territories, colour classes, method text and wording. The header switcher moves
+  from one empire to another with no code change.
 - **Search and filters** by region, ranked list, comparison bars.
 - **Navigable map** — wheel zoom, drag, automatic recentring on a territory.
 - **Shareable links** — `?an=1789` opens a date, `?t=algerie` a profile, `#methode` the method
@@ -83,6 +84,8 @@ assets/
   js/app.js              engine: projection, map, timeline, panel
   js/data/france.js      ★ France dataset
   js/data/usa.js         ★ United States dataset
+  js/data/royaume-uni.js, espagne.js, portugal.js, russie.js,
+  pays-bas.js, ottoman.js, allemagne.js, italie.js, japon.js
   js/data/index.js       country registry
   data/world.geo.json    Natural Earth 50m outlines (683 KB) + French provinces
   vendor/                d3-selection, d3-array, d3-geo (local copies)

@@ -144,7 +144,7 @@ function applyDatasetChrome() {
     b.classList.remove("is-active");
     b.removeAttribute("aria-current");
     const sm = b.querySelector("small");
-    if (sm && b.dataset.pays !== "france" && b.dataset.pays !== "usa") sm.textContent = "bientôt";
+    if (sm) sm.textContent = datasets[b.dataset.pays] ? "en ligne" : "bientôt";
   });
 
   const btn = document.querySelector(`.country[data-pays="${ds.id}"]`);
@@ -334,6 +334,12 @@ function drawMarkers() {
   for (const t of territories) {
     const pts = t.markers || (t.marker ? [t.marker] : []);
     if (!pts.length) continue;
+    // un point n'est utile que si le polygone est trop petit pour être vu
+    if (t._b) {
+      const w = t._b[1][0] - t._b[0][0];
+      const h = t._b[1][1] - t._b[0][1];
+      if (w * h > 60) continue;
+    }
     const g = gMarkers.append("g").attr("class", "marker").attr("data-id", t.id);
     for (const p of pts) g.append("circle").attr("data-pos", p.join(","));
     g.on("pointerenter", (ev) => onHover(t, ev))
