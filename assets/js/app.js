@@ -1046,7 +1046,7 @@ function updateTimelineUi() {
 
   const note = document.getElementById("year-note");
   const ev = ds.events.find((e) => e.year === state.year);
-  if (ev) note.textContent = ev.text.split(" :")[0];
+  if (ev) note.textContent = ev.text.split(" :")[0].slice(0, 32);
   else if (state.mode === "date") note.textContent = state.year >= 2026 ? "aujourd'hui" : "chronologie";
   else note.textContent = "aujourd'hui";
 

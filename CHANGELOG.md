@@ -5,6 +5,11 @@ modification ; la version courante est le premier titre ci-dessous.
 
 ---
 
+## v2026.11.9 — 2026-11-12
+
+- Libellés de carte masqués sous 640 px (sauf le territoire sélectionné) : plus de collision sur mobile.
+- Note d'année tronquée proprement dans la barre de temps ; colonne élargie sur petit écran.
+
 ## v2026.11.8 — 2026-11-12
 
 - Documentation du schéma multi-pays (`groups`, `about`, `adj`, `sovereignty`, `binEdges`).

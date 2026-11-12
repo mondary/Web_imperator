@@ -669,8 +669,8 @@ button { font: inherit; color: inherit; }
   z-index: 10;
 }
 
-.chrono { display: flex; align-items: center; gap: 12px; }
-.chrono-readout { display: flex; flex-direction: column; line-height: 1; }
+.chrono { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.chrono-readout { display: flex; flex-direction: column; line-height: 1; min-width: 0; overflow: hidden; }
 .year {
   font-family: var(--serif);
   font-size: 34px;
@@ -899,7 +899,7 @@ input[type="range"]::-moz-range-thumb {
   .map-status { display: none; }
   .hint { display: none; }
   .map-tools { bottom: 10px; left: 10px; }
-  .timeline { grid-template-columns: 92px minmax(0,1fr); }
+  .timeline { grid-template-columns: 116px minmax(0,1fr); gap: 10px; }
   .year { font-size: 22px; }
   .play { width: 28px; height: 28px; }
   .phase-row { display: none; }
