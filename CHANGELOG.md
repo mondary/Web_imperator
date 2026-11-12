@@ -5,6 +5,12 @@ modification ; la version courante est le premier titre ci-dessous.
 
 ---
 
+## v2026.11.12 — 2026-11-12
+
+- Indicateur de chargement présent dès le HTML (plus de carte vide au premier affichage).
+- Mandchourie figurée par un point plutôt que par la Chine entière : la note l'annonçait, la carte
+  le fait.
+
 ## v2026.11.11 — 2026-11-12
 
 - Captures des nouveaux atlas dans le README ; titre statique neutre ; documentation à jour.

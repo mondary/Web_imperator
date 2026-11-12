@@ -171,8 +171,7 @@ function renderAbout() {
 }
 
 async function loadGeo() {
-  const host = document.getElementById("map");
-  host.insertAdjacentHTML("afterbegin", '<div class="loading" id="loading">Chargement du planisphère…</div>');
+  const loading = document.getElementById("loading");
   const res = await fetch("assets/data/world.geo.json");
   geo = await res.json();
   // on normalise en vraies Features GeoJSON (d3.geoPath attend `type: "Feature"`)
@@ -184,7 +183,6 @@ async function loadGeo() {
     for (const id of t.geo || []) if (!featureById.has(id)) missing.add(`${t.id} → ${id}`);
   }
   if (missing.size) console.warn("Géométries manquantes :", [...missing]);
-  const loading = document.getElementById("loading");
   if (loading) loading.remove();
 }
 

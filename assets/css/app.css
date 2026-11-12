@@ -208,6 +208,7 @@ button { font: inherit; color: inherit; }
 /* --------------------------------------------------------------------- map */
 .loading {
   position: absolute;
+  background: var(--paper);
   inset: 0;
   display: grid;
   place-items: center;
