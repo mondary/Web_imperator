@@ -54,6 +54,16 @@ Règles du modèle :
 | `antecedent: true` | période antérieure à l'État (ex. Gaule) : affichée en hachures, jamais comptée. |
 | `group` | filtre et libellé de région dans la liste. |
 
+Champs de tête (facultatifs mais recommandés) :
+
+| Champ | Rôle |
+| --- | --- |
+| `groups` | `{ id: "Libellé" }` — les puces de filtre du panneau. |
+| `about` | `{ title, lead, sections:[{h, p:[html]}] }` — la fenêtre « Méthode », propre au pays. |
+| `adj` | `{ one, many }` — « territoires français » / « territoires américains ». |
+| `sovereignty` | adjectif de la légende : « française », « américaine ». |
+| `binEdges` | bornes des classes de couleur propres au pays (les durées ne se comparent pas d'un empire à l'autre). |
+
 ## 2. Déclarer le pays
 
 Dans `assets/js/data/index.js` :
@@ -65,7 +75,7 @@ import { italie } from "./italie.js";
 export const datasets = { france, italie };
 ```
 
-Puis dans `index.html`, remplacer `data-pays="italie"` + `data-soon` par un bouton simple :
+Puis dans `index.html`, retirer `data-soon` du bouton existant :
 
 ```html
 <button class="country" type="button" data-pays="italie">Italie<small>en ligne</small></button>

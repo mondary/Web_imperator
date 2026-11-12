@@ -5,6 +5,10 @@ modification ; la version courante est le premier titre ci-dessous.
 
 ---
 
+## v2026.11.8 — 2026-11-12
+
+- Documentation du schéma multi-pays (`groups`, `about`, `adj`, `sovereignty`, `binEdges`).
+
 ## v2026.11.7 — 2026-11-12
 
 Deuxième atlas : **les États-Unis**.
