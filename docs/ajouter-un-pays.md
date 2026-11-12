@@ -1,8 +1,8 @@
 # Ajouter un pays
 
-Le moteur ne connaît aucun pays en particulier : il lit un objet de données et dessine. Ajouter
-l'Italie, l'Allemagne ou le Portugal se fait donc sans toucher à la carte, à la chronologie ni au
-panneau.
+Le moteur ne connaît aucun pays en particulier : il lit un objet de données et dessine. Les onze
+atlas en ligne (France, États-Unis, Royaume-Uni, Espagne, Portugal, Russie, Pays-Bas, Ottomans,
+Allemagne, Italie, Japon) ne partagent aucun code spécifique.
 
 ## 1. Écrire les données
 
@@ -75,7 +75,7 @@ import { italie } from "./italie.js";
 export const datasets = { france, italie };
 ```
 
-Puis dans `index.html`, retirer `data-soon` du bouton existant :
+Puis dans `index.html`, ajouter le bouton au bandeau :
 
 ```html
 <button class="country" type="button" data-pays="italie">Italie<small>en ligne</small></button>

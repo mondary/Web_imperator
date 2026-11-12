@@ -6,7 +6,7 @@
 
 **Un planisphère interactif : combien d'années chaque territoire du monde a-t-il passé sous
 souveraineté française ?** **Onze atlas en ligne** : France, États-Unis, Royaume-Uni, Espagne, Portugal, Russie, Pays-Bas,
-Empire ottoman, Allemagne, Italie, Japon — 340 territoires au total, un curseur temporel et des
+Empire ottoman, Allemagne, Italie, Japon — 278 territoires au total, un curseur temporel et des
 fiches sourcées.
 
 ![Vue cumulée](screenshots/01-cumul.png)
@@ -36,6 +36,8 @@ fiches sourcées.
 ![Nouvelle-France et Louisiane en 1750](screenshots/02-chronologie.png)
 ![L'Empire napoléonien en 1811](screenshots/05-empire.png)
 ![États-Unis en 1848](screenshots/06-etats-unis.png)
+![Empire britannique en 1920](screenshots/07-royaume-uni.png)
+![Empire ottoman en 1680](screenshots/08-ottoman.png)
 ![Fiche territoire](screenshots/03-fiche.png)
 <img src="screenshots/04-mobile.png" width="360" alt="Vue mobile">
 

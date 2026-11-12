@@ -5,6 +5,10 @@ modification ; la version courante est le premier titre ci-dessous.
 
 ---
 
+## v2026.11.11 — 2026-11-12
+
+- Captures des nouveaux atlas dans le README ; titre statique neutre ; documentation à jour.
+
 ## v2026.11.10 — 2026-11-12
 
 **Neuf atlas supplémentaires** — l'application couvre désormais onze empires.

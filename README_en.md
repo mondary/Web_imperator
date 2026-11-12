@@ -6,7 +6,7 @@
 
 **An interactive planisphere: how many years did each territory in the world spend under French
 sovereignty?** **Eleven atlases online**: France, United States, United Kingdom, Spain, Portugal, Russia,
-Netherlands, Ottoman Empire, Germany, Italy, Japan — 340 territories in all, with a time cursor and
+Netherlands, Ottoman Empire, Germany, Italy, Japan — 278 territories in all, with a time cursor and
 sourced profiles.
 
 ![Cumulative view](screenshots/01-cumul.png)
@@ -35,6 +35,8 @@ sourced profiles.
 ![New France and Louisiana in 1750](screenshots/02-chronologie.png)
 ![The Napoleonic Empire in 1811](screenshots/05-empire.png)
 ![United States in 1848](screenshots/06-etats-unis.png)
+![British Empire in 1920](screenshots/07-royaume-uni.png)
+![Ottoman Empire in 1680](screenshots/08-ottoman.png)
 ![Territory profile](screenshots/03-fiche.png)
 <img src="screenshots/04-mobile.png" width="360" alt="Mobile view">
 
