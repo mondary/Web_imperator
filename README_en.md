@@ -5,25 +5,30 @@
 # Imperator — The French World
 
 **An interactive planisphere: how many years did each territory in the world spend under French
-sovereignty?** From Roman Gaul to today — 51 territories, a time cursor and sourced profiles.
+sovereignty?** From 843 to today — 73 territories, a time cursor and sourced profiles.
 
 ![Cumulative view](screenshots/01-cumul.png)
 
 ## What it does
 
 - **Choropleth map** — every territory is shaded by its number of years under French sovereignty,
-  all periods added up (7 classes, from "less than a year" to "800 years and more").
-- **Playable timeline** — a cursor runs from 120 BC to 2026; the play button replays the whole
-  story in about fifteen seconds. At any date, the map and the list show what was held, and for
-  how long.
-- **51 profiles** — detailed periods, years per period, a critical note, a source link.
+  all periods added up (7 classes, from "1 to 9 years" to "800 years and more").
+- **France by province** — mainland France is split into historical provinces rebuilt from today's
+  departments (Dauphiné, Burgundy, Provence, Brittany, Savoy, Nice, Comtat, Alsace…), and the
+  Napoleonic Empire by region (Piedmont, Tuscany, Latium, Belgium, Netherlands).
+- **Playable timeline** — a cursor runs from 843 to 2026; the play button replays the whole story
+  in about twenty seconds. At any date, the map and the list show what was French, and for how long.
+- **Automatic framing** — the map closes in on France in the 9th century and widens to the whole
+  planisphere as the colonial empire grows; manual zoom takes over at any time.
+- **73 profiles** — detailed periods, years per period, a critical note, a source link.
 - **Search and filters** by region, ranked list, comparison bars.
 - **Navigable map** — wheel zoom, drag, automatic recentring on a territory.
 - **Shareable links** — `?an=1789` opens a date, `?t=algerie` a profile, `#methode` the method
   note.
 - Responsive, no network dependency, no build step.
 
-![Timeline in 1789](screenshots/02-chronologie-1789.png)
+![New France and Louisiana in 1750](screenshots/02-chronologie.png)
+![The Napoleonic Empire in 1811](screenshots/05-empire.png)
 ![Territory profile](screenshots/03-fiche.png)
 <img src="screenshots/04-mobile.png" width="360" alt="Mobile view">
 
@@ -52,12 +57,15 @@ three occupations.
 
 Two deliberate choices:
 
-1. **Mainland France: 1,183 years, not 843.** The viral map that inspired this project shows
+1. **Royal domain: 1,183 years, not 843.** The viral map that inspired this project shows
    "843 years" — that is the year of the Treaty of Verdun mistaken for a duration. From 843 to 2026
-   there are 1,183 years. Occupations (Alsace-Moselle 1871-1918 and 1940-1944) are not deducted.
-2. **Present-day borders.** Historical borders cannot be drawn for every period, so New France is
-   shown with the modern provinces and states it partly covered. The map measures a *presence*, not
-   a front line.
+   there are 1,183 years. Occupations of the mainland are not deducted; for Alsace and Moselle they
+   are (both German annexations, 1871-1918 and 1940-1944).
+2. **Present-day borders.** French provinces are rebuilt from groups of present-day departments;
+   New France is shown with the modern provinces and states it partly covered. The map measures a
+   *presence*, not a front line.
+3. **Starting in 843.** Roman Gaul and the Frankish kingdom are antecedents, not France: neither
+   shown nor counted.
 
 The full rationale lives in the site's "Méthode" dialog.
 
@@ -69,7 +77,7 @@ assets/
   css/app.css            single stylesheet, colour tokens
   js/app.js              engine: projection, map, timeline, panel
   js/data/france.js      ★ the historical dataset (the only file to edit)
-  data/world.geo.json    simplified Natural Earth 50m outlines (583 KB)
+  data/world.geo.json    Natural Earth 50m outlines (683 KB) + French provinces
   vendor/                d3-selection, d3-array, d3-geo (local copies)
   img/favicon.svg
 tools/build-geo.py       rebuilds world.geo.json from world-atlas / us-atlas / Canada

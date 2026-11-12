@@ -171,6 +171,26 @@ def split_multipolygon(geom, predicate):
     return out
 
 
+def signed_area(ring):
+    total = 0.0
+    for (x1, y1), (x2, y2) in zip(ring, ring[1:]):
+        total += x1 * y2 - x2 * y1
+    return total / 2.0
+
+
+def fix_winding(geom):
+    """d3-geo attend des anneaux extérieurs orientés comme Natural Earth (aire < 0).
+    Mapshaper peut produire l'orientation inverse, ce qui remplit la sphère entière."""
+    polys = geom["coordinates"] if geom["type"] == "MultiPolygon" else [geom["coordinates"]]
+    for poly in polys:
+        if not poly or not poly[0]:
+            continue
+        if signed_area(poly[0]) > 0:
+            for i, ring in enumerate(poly):
+                poly[i] = list(reversed(ring))
+    return geom
+
+
 def poly_of(geom):
     if geom["type"] == "Polygon":
         return {"type": "MultiPolygon", "coordinates": [geom["coordinates"]]}
@@ -296,6 +316,13 @@ for c in countries:
                     feats.append({"id": pid, "name": pid, "country": "france", "geometry": sg})
         continue
 
+    if cid == "pays-bas":
+        # Natural Earth inclut les communes caribéennes : on ne garde que l'Europe
+        euro, _ = split_multipolygon(poly_of(geom), lambda bb: bb[0] > -30)
+        geom = simplify_geometry(poly_of(euro), 0.045) if euro else geom
+        if geom is None:
+            continue
+
     feats.append({"id": cid or name.lower().replace(" ", "-"), "name": name,
                   "country": cid or None, "geometry": geom})
 
@@ -328,6 +355,94 @@ for f in canada_feats:
     g = simplify_geometry(poly_of(f["geometry"]), 0.02)
     if g:
         feats.append({"id": "ca-" + CA_KEEP[n], "name": n, "country": "canada", "geometry": g})
+
+# --- France par régions historiques (départements fusionnés) --------------
+# Source : france-geojson (départements simplifiés) puis dissolution par groupe.
+# La métropole Natural Earth est remplacée par ce découpage.
+feats = [f for f in feats if f["id"] not in ("metropole", "corse")]
+FR_REGIONS = {
+    "savoie": ["73", "74"], "nice": ["06"], "corse": ["2A", "2B"], "comtat": ["84"],
+    "alsace": ["67", "68"], "moselle": ["57"], "roussillon": ["66"],
+    "franche-comte": ["25", "39", "70", "90"], "flandre": ["59", "62"],
+    "lorraine": ["54", "55", "88"], "bretagne": ["22", "29", "35", "56"],
+    "provence": ["04", "05", "13", "83"], "dauphine": ["26", "38"],
+    "bourgogne": ["21", "58", "71", "89"], "bearn": ["64"], "bresse": ["01"],
+}
+
+fr_path = download(
+    "https://raw.githubusercontent.com/gregoiredavid/france-geojson/master/departements-version-simplifiee.geojson",
+    "fr-dep.geojson",
+)
+assign = {c: r for r, codes in FR_REGIONS.items() for c in codes}
+deps = json.load(open(fr_path))
+for f in deps["features"]:
+    code = f["properties"]["code"]
+    f["properties"] = {"code": code, "region": assign.get(code, "coeur")}
+
+tagged = os.path.join(CACHE, "fr-regions.geojson")
+json.dump(deps, open(tagged, "w"))
+
+dissolved = os.path.join(CACHE, "fr-dissolved.geojson")
+subprocess.run(
+    ["npx", "--yes", "mapshaper", "-i", tagged, "-dissolve", "region",
+     "copy-fields=region", "-simplify", "12%", "keep-shapes", "-o", "format=geojson", dissolved],
+    check=True, capture_output=True,
+)
+
+FR_LABELS = {
+    "coeur": ("fr", "Royaume de France"),
+    "savoie": ("fr-savoie", "Savoie"),
+    "nice": ("fr-nice", "Comté de Nice"),
+    "corse": ("corse", "Corse"),
+    "comtat": ("fr-comtat", "Comtat Venaissin"),
+    "alsace": ("fr-alsace", "Alsace"),
+    "moselle": ("fr-moselle", "Moselle"),
+    "roussillon": ("fr-roussillon", "Roussillon"),
+    "franche-comte": ("fr-franche-comte", "Franche-Comté"),
+    "flandre": ("fr-flandre", "Flandre & Artois"),
+    "lorraine": ("fr-lorraine", "Lorraine"),
+    "bretagne": ("fr-bretagne", "Bretagne"),
+    "provence": ("fr-provence", "Provence"),
+    "dauphine": ("fr-dauphine", "Dauphiné"),
+    "bourgogne": ("fr-bourgogne", "Bourgogne"),
+    "bearn": ("fr-bearn", "Béarn"),
+    "bresse": ("fr-bresse", "Bresse & Bugey"),
+}
+
+for f in json.load(open(dissolved))["features"]:
+    reg = f["properties"]["region"]
+    fid, label = FR_LABELS[reg]
+    geom = f["geometry"]
+    if geom["type"] == "Polygon":
+        geom = {"type": "MultiPolygon", "coordinates": [geom["coordinates"]]}
+    feats.append({"id": fid, "name": label, "country": "france", "geometry": fix_winding(geom)})
+
+# --- Italie par régions (Empire) -----------------------------------------
+it_path = download(
+    "https://raw.githubusercontent.com/openpolis/geojson-italy/master/geojson/limits_IT_regions.geojson",
+    "it-reg.geojson",
+)
+it_simplified = os.path.join(CACHE, "it-reg-simplified.geojson")
+subprocess.run(
+    ["npx", "--yes", "mapshaper", "-i", it_path, "-simplify", "4%", "keep-shapes",
+     "-o", "format=geojson", it_simplified],
+    check=True, capture_output=True,
+)
+
+IT_IDS = {
+    "Piemonte": "it-piemonte", "Valle d'Aosta/Vallée d'Aoste": "it-aoste",
+    "Liguria": "it-ligurie", "Lombardia": "it-lombardie", "Veneto": "it-venetie",
+    "Emilia-Romagna": "it-emilie", "Toscana": "it-toscane", "Umbria": "it-ombrie",
+    "Lazio": "it-latium", "Marche": "it-marches", "Sardegna": "it-sardaigne",
+}
+for f in json.load(open(it_simplified))["features"]:
+    name = f["properties"]["reg_name"]
+    if name not in IT_IDS:
+        continue
+    geom = f["geometry"]
+    if geom["type"] == "Polygon":
+        geom = {"type": "MultiPolygon", "coordinates": [geom["coordinates"]]}
+    feats.append({"id": IT_IDS[name], "name": name, "country": "italie", "geometry": fix_winding(geom)})
 
 # --- Terre Adélie : absente de Natural Earth 50m, ajoutée à la main -------
 ADELIE = {

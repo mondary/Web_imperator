@@ -47,8 +47,8 @@
         <h1 id="stage-title">843 – aujourd'hui</h1>
       </div>
       <div class="modes" role="tablist" aria-label="Mode d'affichage">
-        <button class="mode is-active" role="tab" data-mode="cumul" aria-selected="true">Cumul</button>
-        <button class="mode" role="tab" data-mode="date" aria-selected="false">Chronologie</button>
+        <button class="mode is-active" role="tab" data-mode="cumul" aria-selected="true">Toutes époques</button>
+        <button class="mode" role="tab" data-mode="date" aria-selected="false">À une date</button>
       </div>
     </div>
 
@@ -64,7 +64,7 @@
         <ul id="legend-items"></ul>
         <p class="legend-foot" id="legend-foot"></p>
       </div>
-      <div class="hint" id="map-hint">Molette pour zoomer · glisser pour déplacer</div>
+      <div class="hint" id="map-hint">Molette : zoom · Glisser : déplacer · ⌂ : recadrer</div>
       <div class="tooltip" id="tooltip" hidden></div>
       <div class="map-status" id="map-status" hidden></div>
     </div>
@@ -79,12 +79,8 @@
           <span class="stat-l">territoires</span>
         </div>
         <div class="stat">
-          <span class="stat-n" id="stat-years">—</span>
-          <span class="stat-l">ans cumulés</span>
-        </div>
-        <div class="stat">
           <span class="stat-n" id="stat-max">—</span>
-          <span class="stat-l">ans, record</span>
+          <span class="stat-l">ans · record</span>
         </div>
       </div>
 
@@ -132,7 +128,7 @@
 
   <div class="chrono-live">
     <span class="live-n" id="live-n">—</span>
-    <span class="live-l">territoires tenus</span>
+    <span class="live-l">territoires français</span>
   </div>
 </footer>
 
@@ -141,7 +137,7 @@
   <div class="sheet-body">
     <p class="kicker">Méthode</p>
     <h2>Ce que compte cette carte</h2>
-    <p class="lead">Chaque territoire est coloré selon le nombre d'années pendant lesquelles il a été sous souveraineté française, périodes additionnées, de l'Antiquité à aujourd'hui.</p>
+    <p class="lead">Chaque territoire est coloré selon le nombre d'années pendant lesquelles il a été sous souveraineté française, périodes additionnées, de 843 à aujourd'hui.</p>
 
     <h3>Le comptage</h3>
     <p>Un territoire compte dès qu'une autorité française y exerce la souveraineté : prise de possession, traité, annexion, protectorat ou mandat. Il cesse de compter à la cession, à l'indépendance ou à la perte militaire. Les périodes sont ensuite <strong>additionnées</strong> : Saint-Pierre-et-Miquelon, perdu et rendu trois fois, cumule ses trois occupations.</p>
@@ -151,7 +147,9 @@
     <p>La carte virale qui a inspiré ce site affiche « 843 ans » pour la France métropolitaine : c'est une confusion entre l'année de départ (843, traité de Verdun) et une durée. De 843 à 2026, il y a 1 183 ans. Nous gardons 843 comme point de départ, mais nous comptons les années.</p>
 
     <h3>Les frontières</h3>
-    <p>Les contours sont ceux d'aujourd'hui, faute de pouvoir dessiner chaque frontière historique. La Nouvelle-France est figurée par les provinces et États actuels qu'elle recouvrait en partie ; l'emprise réelle était plus lâche, faite de postes, de forts et d'alliances. La carte mesure donc une <em>présence</em>, pas une ligne de front.</p>
+    <p>La France n'est pas dessinée d'un bloc : la métropole est découpée en <strong>provinces historiques</strong> (Dauphiné 1349, Bourgogne 1477, Provence 1481, Bretagne 1532, Bresse 1601, Béarn 1620, Alsace 1648, Roussillon 1659, Flandre 1659, Franche-Comté 1678, Lorraine 1766, Comtat 1791, Corse 1768, Savoie et Nice 1860…), reconstituées à partir des départements actuels. L'Empire napoléonien est de même figuré par régions : Piémont, Ligurie, Toscane, Ombrie, Latium, Belgique, Pays-Bas.</p>
+    <p>Ailleurs, les contours restent ceux d'aujourd'hui : la Nouvelle-France est figurée par les provinces et États actuels qu'elle recouvrait en partie ; l'emprise réelle était plus lâche, faite de postes, de forts et d'alliances. La carte mesure donc une <em>présence</em>, pas une ligne de front.</p>
+    <p>La chronologie commence en 843, à la naissance de la Francie occidentale : la Gaule romaine et le royaume franc sont des antécédents, pas la France.</p>
 
     <h3>Les sources</h3>
     <p>Chaque fiche renvoie à sa page Wikipédia, point de départ vérifiable. Les dates retenues sont les plus couramment admises ; elles sont discutables, et c'est écrit dans les notes quand c'est le cas.</p>

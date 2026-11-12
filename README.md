@@ -5,26 +5,31 @@
 # Imperator — Le monde français
 
 **Un planisphère interactif : combien d'années chaque territoire du monde a-t-il passé sous
-souveraineté française ?** De la Gaule romaine à aujourd'hui, 51 territoires, un curseur
-temporel et des fiches sourcées.
+souveraineté française ?** De 843 à aujourd'hui, 73 territoires, un curseur temporel et des fiches sourcées.
 
 ![Vue cumulée](screenshots/01-cumul.png)
 
 ## Ce que fait le site
 
 - **Carte choroplèthe** — chaque territoire est coloré selon le nombre d'années de souveraineté
-  française, périodes additionnées (7 classes, de « moins d'un an » à « 800 ans et plus »).
-- **Chronologie jouable** — un curseur va de 120 av. J.-C. à 2026 ; le bouton lecture rejoue
-  l'histoire en une quinzaine de secondes. À chaque date, la carte et la liste montrent ce qui
-  était tenu, et depuis combien d'années.
-- **51 fiches** — périodes détaillées, nombres d'années par période, note critique, lien source.
+  française, périodes additionnées (7 classes, de « 1 à 9 ans » à « 800 ans et plus »).
+- **La France par provinces** — la métropole est découpée en provinces historiques reconstituées à
+  partir des départements (Dauphiné, Bourgogne, Provence, Bretagne, Savoie, Nice, Comtat, Alsace…),
+  et l'Empire napoléonien par régions (Piémont, Toscane, Latium, Belgique, Pays-Bas).
+- **Chronologie jouable** — un curseur va de 843 à 2026 ; le bouton lecture rejoue l'histoire en
+  une vingtaine de secondes. À chaque date, la carte et la liste montrent ce qui était français, et
+  depuis combien d'années.
+- **Cadrage automatique** — la carte se resserre sur la France au IXe siècle et s'élargit au
+  planisphère à mesure que l'empire colonial s'étend ; le zoom manuel reprend la main.
+- **73 fiches** — périodes détaillées, nombres d'années par période, note critique, lien source.
 - **Recherche et filtres** par région, liste classée, barres comparatives.
 - **Carte navigable** — zoom molette, déplacement, recentrage automatique sur un territoire.
 - **Liens partageables** — `?an=1789` ouvre une date, `?t=algerie` une fiche, `#methode` la note
   de méthode.
 - Responsive, sans dépendance réseau, sans build.
 
-![Chronologie en 1789](screenshots/02-chronologie-1789.png)
+![Nouvelle-France et Louisiane en 1750](screenshots/02-chronologie.png)
+![L'Empire napoléonien en 1811](screenshots/05-empire.png)
 ![Fiche territoire](screenshots/03-fiche.png)
 <img src="screenshots/04-mobile.png" width="360" alt="Vue mobile">
 
@@ -53,12 +58,15 @@ perdu et rendu trois fois, cumule ses trois occupations.
 
 Deux points assumés :
 
-1. **Métropole : 1 183 ans, pas 843.** La carte virale qui a inspiré ce projet affiche « 843 ans » :
+1. **Domaine royal : 1 183 ans, pas 843.** La carte virale qui a inspiré ce projet affiche « 843 ans » :
    c'est l'année du traité de Verdun confondue avec une durée. De 843 à 2026 il y a 1 183 ans.
-   Les occupations (Alsace-Moselle 1871-1918 et 1940-1944) ne sont pas déduites.
-2. **Contours actuels.** Faute de pouvoir dessiner chaque frontière historique, la Nouvelle-France
-   est figurée par les provinces et États actuels qu'elle recouvrait en partie. La carte mesure une
-   *présence*, pas une ligne de front.
+   Les occupations de la métropole ne sont pas déduites ; pour l'Alsace et la Moselle, si :
+   les deux annexions allemandes (1871-1918 et 1940-1944) sont retirées.
+2. **Contours actuels.** Les provinces françaises sont reconstituées par groupes de départements
+   actuels ; la Nouvelle-France est figurée par les provinces et États actuels qu'elle recouvrait en
+   partie. La carte mesure une *présence*, pas une ligne de front.
+3. **Départ en 843.** La Gaule romaine et le royaume franc sont des antécédents, pas la France :
+   ils ne sont ni affichés ni comptés.
 
 Détail complet dans la fenêtre « Méthode » du site.
 
@@ -70,10 +78,10 @@ assets/
   css/app.css            feuille unique, variables de couleur
   js/app.js              moteur : projection, carte, chronologie, panneau
   js/data/france.js      ★ les données historiques (le seul fichier à éditer)
-  data/world.geo.json    contours Natural Earth 50m simplifiés (583 Ko)
+  data/world.geo.json    contours Natural Earth 50m (683 Ko) + provinces françaises
   vendor/                d3-selection, d3-array, d3-geo (copies locales)
   img/favicon.svg
-tools/build-geo.py       régénère world.geo.json depuis world-atlas / us-atlas / Canada
+tools/build-geo.py       régénère world.geo.json (Natural Earth, départements, régions italiennes)
 screenshots/
 ```
 

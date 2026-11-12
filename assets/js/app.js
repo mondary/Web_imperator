@@ -8,8 +8,7 @@ import { datasets, getDataset } from "./data/index.js";
 
 const RAMP = ["#ded6ef", "#c6b5e9", "#a488dd", "#8260c7", "#6140aa", "#452a86", "#2b1a5e"];
 const BINS = [
-  { min: 0, max: 1, color: "#d9d4c6", label: "moins d'un an" },
-  { min: 1, max: 10, color: RAMP[0], label: "1 – 9 ans" },
+  { min: 0, max: 10, color: RAMP[0], label: "1 – 9 ans" },
   { min: 10, max: 50, color: RAMP[1], label: "10 – 49 ans" },
   { min: 50, max: 100, color: RAMP[2], label: "50 – 99 ans" },
   { min: 100, max: 250, color: RAMP[3], label: "100 – 249 ans" },
@@ -30,7 +29,6 @@ const GROUPS = {
 
 /** Couleur d'une durée en années. */
 function colorFor(years) {
-  if (!years || years < 1) return BINS[0].color;
   for (const b of BINS) if (years < b.max) return b.color;
   return RAMP[RAMP.length - 1];
 }
@@ -55,6 +53,9 @@ const state = {
   playing: false,
   zoom: { k: 1, x: 0, y: 0 },
   focus: null,
+  autoFrame: true,
+  frameTarget: null,
+  frameRaf: null,
 };
 
 let geo = null;
@@ -264,6 +265,11 @@ function drawTerritories() {
     const g = gTerr.append("g").attr("class", "terr").attr("data-id", t.id);
     const geoms = (t.geo || []).map((id) => featureById.get(id)).filter(Boolean);
     for (const f of geoms) g.append("path").attr("d", path(f));
+    t._b = null;
+    if (geoms.length) {
+      const bb = path.bounds({ type: "FeatureCollection", features: geoms });
+      if (Number.isFinite(bb[0][0]) && Number.isFinite(bb[1][0])) t._b = bb;
+    }
     if (t.id === "gaule" || t.id === "francs") g.classed("hatch", true);
 
     g.on("pointerenter", (ev) => onHover(t, ev))
@@ -285,6 +291,13 @@ function drawMarkers() {
     if (!pts.length) continue;
     const g = gMarkers.append("g").attr("class", "marker").attr("data-id", t.id);
     for (const p of pts) g.append("circle").attr("data-pos", p.join(","));
+    g.on("pointerenter", (ev) => onHover(t, ev))
+      .on("pointermove", (ev) => moveTooltip(ev))
+      .on("pointerleave", () => hideTooltip())
+      .on("click", (ev) => {
+        ev.stopPropagation();
+        select(t.id);
+      });
     markerNodes.set(t.id, g);
   }
 }
@@ -318,6 +331,92 @@ function recenterFocus() {
   state.zoom.x = width / 2 - p[0] * state.zoom.k;
   state.zoom.y = height / 2 - p[1] * state.zoom.k;
   clampZoom();
+}
+
+/** Cadre la vue sur l'ensemble des territoires français à la date courante. */
+function frameTargetFor() {
+  if (state.mode !== "date") return { k: 1, x: 0, y: 0 };
+
+  const shown = territories.filter((t) => !t.antecedent && heldAt(t, state.year));
+  if (!shown.length) return { k: 1, x: 0, y: 0 };
+
+  const box = (t) => {
+    if (t._b) return { x0: t._b[0][0], y0: t._b[0][1], x1: t._b[1][0], y1: t._b[1][1] };
+    const pts = (t.markers || (t.marker ? [t.marker] : []))
+      .map((p) => projection(p))
+      .filter(Boolean);
+    if (!pts.length) return null;
+    // un chapelet de points ne doit jamais élargir le cadre : aire nulle
+    return {
+      x0: Math.min(...pts.map((p) => p[0])), x1: Math.max(...pts.map((p) => p[0])),
+      y0: Math.min(...pts.map((p) => p[1])), y1: Math.max(...pts.map((p) => p[1])),
+      points: true,
+    };
+  };
+
+  const core = box(territories.find((t) => t.id === "metropole") || {});
+  const coreArea = core ? Math.max(1, (core.x1 - core.x0) * (core.y1 - core.y0)) : 1;
+
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  const add = (b) => {
+    if (!b) return;
+    x0 = Math.min(x0, b.x0); y0 = Math.min(y0, b.y0);
+    x1 = Math.max(x1, b.x1); y1 = Math.max(y1, b.y1);
+  };
+
+  for (const t of shown) {
+    const b = box(t);
+    if (!b) continue;
+    const area = b.points ? 0 : (b.x1 - b.x0) * (b.y1 - b.y0);
+    // l'Europe fait toujours partie du cadre ; ailleurs, il faut un territoire
+    // assez grand pour justifier d'élargir la vue (un comptoir ne suffit pas)
+    const isEurope = t.group === "metropole" || t.group === "europe" || t.id === "metropole";
+    if (!isEurope && area < coreArea * 0.55) continue;
+    add(b);
+  }
+  if (!Number.isFinite(x0)) return { k: 1, x: 0, y: 0 };
+
+  const bw = Math.max(12, x1 - x0);
+  const bh = Math.max(12, y1 - y0);
+  const k = clamp(Math.min((width * 0.78) / bw, (height * 0.78) / bh), 1, 6);
+  const cx = (x0 + x1) / 2;
+  const cy = (y0 + y1) / 2;
+  return { k, x: width / 2 - cx * k, y: height / 2 - cy * k };
+}
+
+function animateTo(target) {
+  state.frameTarget = target;
+  if (state.frameRaf) {
+    cancelAnimationFrame(state.frameRaf);
+    state.frameRaf = null;
+  }
+  const step = () => {
+    const t = state.frameTarget;
+    if (!t) { state.frameRaf = null; return; }
+    const p = state.zoom;
+    const a = 0.16;
+    p.k += (t.k - p.k) * a;
+    p.x += (t.x - p.x) * a;
+    p.y += (t.y - p.y) * a;
+    const near =
+      Math.abs(t.k - p.k) < 0.004 &&
+      Math.abs(t.x - p.x) < 0.7 &&
+      Math.abs(t.y - p.y) < 0.7;
+    if (near) {
+      p.k = t.k; p.x = t.x; p.y = t.y;
+      updateTransform();
+      state.frameRaf = null;
+      return;
+    }
+    updateTransform();
+    state.frameRaf = requestAnimationFrame(step);
+  };
+  state.frameRaf = requestAnimationFrame(step);
+}
+
+function updateAutoFrame() {
+  if (!state.autoFrame) return;
+  animateTo(frameTargetFor());
 }
 
 function project([lon, lat]) {
@@ -356,9 +455,16 @@ function updateLabels() {
 
 function anchorOf(t) {
   const f = (t.geo || []).map((id) => featureById.get(id)).find(Boolean);
-  if (!f) return t.marker || null;
-  const c = d3.geoCentroid(f);
-  return [c[0], c[1]];
+  if (f) {
+    const c = d3.geoCentroid(f);
+    return [c[0], c[1]];
+  }
+  const pts = t.markers || (t.marker ? [t.marker] : []);
+  if (!pts.length) return null;
+  return [
+    pts.reduce((a, p) => a + p[0], 0) / pts.length,
+    pts.reduce((a, p) => a + p[1], 0) / pts.length,
+  ];
 }
 
 /* ------------------------------------------------------------------ render */
@@ -421,13 +527,12 @@ function applyState() {
   writeUrl();
   updateStatus(dateMode);
   updateTimelineUi();
+  updateAutoFrame();
 }
 
 function updateHeader() {
-  const total = territories.filter((t) => !t.antecedent).reduce((s, t) => s + t.years, 0);
   const max = Math.max(...territories.filter((t) => !t.antecedent).map((t) => t.years));
   document.getElementById("stat-territories").textContent = territories.filter((t) => !t.antecedent).length;
-  document.getElementById("stat-years").textContent = fmt(total);
   document.getElementById("stat-max").textContent = fmt(max);
 }
 
@@ -439,12 +544,7 @@ function updateStatus(dateMode) {
   }
   const held = territories.filter((t) => !t.antecedent && heldAt(t, state.year));
   el.hidden = false;
-  if (state.year < 843) {
-    const a = territories.filter((t) => t.antecedent && heldAt(t, state.year)).pop();
-    el.innerHTML = `<strong>${formatYear(state.year)}</strong> ${a ? a.name : "avant la France"} <span style="opacity:.55">· antécédent</span>`;
-    return;
-  }
-  el.innerHTML = `<strong>${formatYear(state.year)}</strong> ${held.length} territoire${held.length > 1 ? "s" : ""} tenu${held.length > 1 ? "s" : ""}`;
+  el.innerHTML = `<strong>${formatYear(state.year)}</strong> ${held.length} territoire${held.length > 1 ? "s" : ""} français`;
 }
 
 function formatYear(y) {
@@ -500,7 +600,7 @@ function visibleTerritories() {
   const q = strip(state.query.trim());
   return territories
     .filter((t) => (state.filter === "all" ? !t.antecedent : t.group === state.filter))
-    .filter((t) => state.mode !== "date" || yearsAt(t, state.year) > 0)
+    .filter((t) => state.mode !== "date" || heldAt(t, state.year))
     .filter((t) => !q || strip(t.name).includes(q) || strip(t.short || "").includes(q))
     .sort((a, b) => valueOf(b) - valueOf(a) || a.name.localeCompare(b.name, "fr"));
 }
@@ -521,16 +621,11 @@ function updateList() {
     const btn = document.createElement("button");
     btn.type = "button";
     const v = valueOf(t);
-    const held = state.mode === "date" && heldAt(t, state.year);
-    const tag = state.mode === "date" && held ? '<span class="tag">tenu</span>' : "";
-    btn.className =
-      "row" +
-      (state.selected === t.id ? " is-sel" : "") +
-      (state.mode === "date" && !held ? " dim" : "");
+    btn.className = "row" + (state.selected === t.id ? " is-sel" : "");
     btn.innerHTML = `
       <span class="row-rank">${String(i + 1).padStart(2, "0")}</span>
       <span class="row-main">
-        <span class="row-name">${t.name}${tag}</span>
+        <span class="row-name">${t.name}</span>
         <span class="row-bar"><i style="width:${(v / max) * 100}%;background:${colorFor(Math.max(1, v))}"></i></span>
       </span>
       <span class="row-years">${fmt(v)}<small>ans</small></span>`;
@@ -553,6 +648,7 @@ function updateList() {
 /* --------------------------------------------------------------- sélection */
 
 function select(id, fromList = false) {
+  hideTooltip();
   state.selected = state.selected === id ? null : id;
   applyState();
   const panel = document.getElementById("panel");
@@ -653,14 +749,13 @@ function fitTo(t) {
   const k = clamp(Math.min((width * 0.78) / bw, (height * 0.78) / bh), 1, 11);
   const cx = (x0 + x1) / 2;
   const cy = (y0 + y1) / 2;
-  state.zoom = { k, x: width / 2 - cx * k, y: height / 2 - cy * k };
+  state.autoFrame = false;
   state.focus = d3.geoCentroid({ type: "FeatureCollection", features: geoms.length ? geoms : [] });
   if (!geoms.length) {
     const pts = t.markers || (t.marker ? [t.marker] : []);
     if (pts.length) state.focus = [pts[0][0], pts[0][1]];
   }
-  clampZoom();
-  updateTransform();
+  animateTo({ k, x: width / 2 - cx * k, y: height / 2 - cy * k });
   resetHint();
 }
 
@@ -668,13 +763,23 @@ function fitTo(t) {
 
 const tooltip = () => document.getElementById("tooltip");
 
+function tooltipHtml(t) {
+  const held = heldAt(t, state.year);
+  if (state.mode === "date" && !held) {
+    return `<span class="tt-name">${t.name}</span>
+      <span class="tt-sub">hors souveraineté en ${formatYear(state.year)}</span>
+      <span class="tt-sub">${fmt(t.years)} ans au total</span>`;
+  }
+  const v = state.mode === "date" ? yearsAt(t, state.year) : t.years;
+  return `<span class="tt-name">${t.name}</span>
+    <span class="tt-years">${fmt(v)} ans</span>
+    <span class="tt-sub">${t.kind || ""}${state.mode === "date" ? ` · en ${formatYear(state.year)}` : ""}</span>`;
+}
+
 function onHover(t, ev) {
   const tt = tooltip();
-  const v = state.mode === "date" ? yearsAt(t, state.year) : t.years;
   tt.hidden = false;
-  tt.innerHTML = `<span class="tt-name">${t.name}</span>
-    <span class="tt-years">${t.antecedent ? "antécédent" : `${fmt(v)} ans`}</span>
-    <span class="tt-sub">${t.antecedent ? "avant la France" : state.mode === "date" && !heldAt(t, state.year) ? "hors souveraineté à cette date" : (t.kind || "")}</span>`;
+  tt.innerHTML = tooltipHtml(t);
   moveTooltip(ev);
 }
 
@@ -694,32 +799,35 @@ function hideTooltip() {
 function highlight(id, on) {
   const g = terrNodes.get(id);
   if (g) g.classed("sel", on || state.selected === id);
-  if (on) {
-    const t = territories.find((x) => x.id === id);
-    if (t) {
-      const p = t.label || anchorOf(t);
-      if (p) {
-        const [x, y] = project(p);
-        const tt = tooltip();
-        tt.hidden = false;
-        tt.innerHTML = `<span class="tt-name">${t.name}</span><span class="tt-years">${fmt(valueOf(t))} ans</span>`;
-        tt.style.left = `${x}px`;
-        tt.style.top = `${y}px`;
-      }
-    }
-  } else hideTooltip();
+  const mg = markerNodes.get(id);
+  if (mg) mg.classed("sel", on || state.selected === id);
+
+  if (!on) { hideTooltip(); return; }
+  const t = territories.find((x) => x.id === id);
+  if (!t) return;
+  const p = anchorOf(t);
+  if (!p) return;
+  const [x, y] = project(p);
+  if (x < 30 || y < 30 || x > width - 30 || y > height - 30) { hideTooltip(); return; }
+  const tt = tooltip();
+  tt.hidden = false;
+  tt.innerHTML = tooltipHtml(t);
+  tt.style.left = `${clamp(x, 70, width - 70)}px`;
+  tt.style.top = `${clamp(y, 50, height - 8)}px`;
 }
 
 /* ------------------------------------------------------------------- zoom */
 
 function wireZoom() {
   const host = document.getElementById("map");
+  host.addEventListener("pointerleave", () => hideTooltip());
   let dragging = false;
   let moved = 0;
   let start = null;
 
   host.addEventListener("wheel", (e) => {
     e.preventDefault();
+    state.autoFrame = false;
     const rect = host.getBoundingClientRect();
     const mx = e.clientX - rect.left;
     const my = e.clientY - rect.top;
@@ -730,6 +838,7 @@ function wireZoom() {
     if (e.target.closest(".map-tools, .legend")) return;
     dragging = true;
     moved = 0;
+    state.autoFrame = false;
     start = { x: e.clientX, y: e.clientY, tx: state.zoom.x, ty: state.zoom.y };
     host.classList.add("is-dragging");
   });
@@ -759,10 +868,12 @@ function wireZoom() {
   document.querySelectorAll("[data-zoom]").forEach((b) => {
     b.addEventListener("click", () => {
       const a = b.dataset.zoom;
+      state.autoFrame = false;
       if (a === "in") zoomAt(width / 2, height / 2, 1.35);
       else if (a === "out") zoomAt(width / 2, height / 2, 1 / 1.35);
       else {
         state.zoom = { k: 1, x: 0, y: 0 };
+        state.autoFrame = state.mode === "date";
         updateTransform();
         resetHint();
       }
@@ -807,6 +918,7 @@ function wireTimeline() {
   slider.value = String(state.year);
   slider.addEventListener("input", () => {
     if (state.mode !== "date") setMode("date", false);
+    state.autoFrame = true;
     setYear(Number(slider.value));
   });
 
@@ -822,8 +934,8 @@ function wireTimeline() {
     b.innerHTML = `<b>${formatYear(p.year)}</b>${p.label}`;
     b.addEventListener("click", () => {
       setMode("date", false);
+      state.autoFrame = true;
       setYear(p.year);
-      if (state.mode === "date" && state.selected) applyState();
     });
     phases.appendChild(b);
   }
@@ -873,11 +985,15 @@ function buildTicks() {
 
 function updateTimelineUi() {
   if (state.mode === "date") {
-    document.getElementById("stage-title").textContent = `État du monde en ${formatYear(state.year)}`;
+    document.getElementById("stage-title").textContent = `Le monde français en ${formatYear(state.year)}`;
   }
   const slider = document.getElementById("slider");
   if (Number(slider.value) !== state.year) slider.value = String(state.year);
   document.getElementById("year-label").textContent = formatYear(state.year);
+  document.getElementById("legend-foot").textContent =
+    state.mode === "date"
+      ? `Années de souveraineté accumulées jusqu'en ${formatYear(state.year)} — découpage actuel.`
+      : "Total des périodes documentées, toutes époques — découpage actuel.";
 
   const note = document.getElementById("year-note");
   const ev = ds.events.find((e) => e.year === state.year);
@@ -914,11 +1030,11 @@ function syncModeUi() {
     b.setAttribute("aria-selected", on ? "true" : "false");
   });
   document.getElementById("stage-title").textContent =
-    state.mode === "date" ? `État du monde en ${formatYear(state.year)}` : ds.hero.headline;
+    state.mode === "date" ? `Le monde français en ${formatYear(state.year)}` : ds.hero.headline;
   document.getElementById("legend-foot").textContent =
     state.mode === "date"
-      ? "Années accumulées jusqu'à cette date. Contours actuels."
-      : "Somme des périodes documentées. Contours actuels.";
+      ? `Années de souveraineté accumulées jusqu'en ${formatYear(state.year)} — découpage actuel.`
+      : "Total des périodes documentées, toutes époques — découpage actuel.";
 }
 
 function setMode(mode, announce = true) {
@@ -936,6 +1052,7 @@ function togglePlay() {
   const btn = document.getElementById("play");
   btn.classList.toggle("is-playing", state.playing);
   if (state.playing) {
+    state.autoFrame = true;
     setMode("date");
     if (state.year >= ds.endYear) state.year = ds.startYear;
     last = null;
@@ -950,9 +1067,11 @@ let last = null;
 function tick(ts) {
   if (!state.playing) return;
   if (last == null) last = ts;
-  const dt = Math.min(64, ts - last);
+  let dt = ts - last;
+  if (!(dt > 0)) dt = 16; // horloge figée (onglet en arrière-plan, rendu headless)
+  dt = Math.min(64, dt);
   last = ts;
-  const yearsPerSecond = 30;
+  const yearsPerSecond = 55;
   const next = state.year + (dt / 1000) * yearsPerSecond;
   if (next >= ds.endYear) {
     setYear(ds.endYear);

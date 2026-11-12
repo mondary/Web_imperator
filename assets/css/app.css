@@ -234,7 +234,10 @@ button { font: inherit; color: inherit; }
 .rim { fill: none; stroke: #cfd3cc; stroke-width: .7px; }
 
 .terr path {
-  stroke: none;
+  stroke: rgba(28, 26, 22, .16);
+  stroke-width: .5px;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
   transition: fill .38s ease, opacity .25s ease;
   cursor: pointer;
 }
@@ -243,6 +246,7 @@ button { font: inherit; color: inherit; }
 .terr.hatch path { fill: url(#hatch); }
 
 .marker { pointer-events: none; }
+.marker circle { pointer-events: auto; cursor: pointer; }
 .marker circle {
   fill: var(--h5);
   stroke: var(--paper-2);
@@ -264,7 +268,7 @@ button { font: inherit; color: inherit; }
   pointer-events: none;
   text-transform: uppercase;
 }
-.labels text.big { font-size: 1.25em; letter-spacing: .1em; font-weight: 600; }
+.labels text.big { font-size: 1.12em; letter-spacing: .1em; font-weight: 600; }
 .labels text.soft { fill: var(--muted); font-size: 8px; }
 
 .map-tools {
@@ -878,7 +882,7 @@ input[type="range"]::-moz-range-thumb {
 
 @media (max-width: 620px) {
   .countries { display: none; }
-  .panel { max-height: 38vh; }
+  .panel { max-height: 34vh; }
   .modes .mode { padding: 5px 10px; font-size: 11px; }
   .stage-title h1 { font-size: 20px; }
   .legend { top: 6px; bottom: auto; right: 8px; left: 8px; width: auto; padding: 6px 8px 7px; }

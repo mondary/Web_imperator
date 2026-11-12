@@ -5,6 +5,32 @@ modification ; la version courante est le premier titre ci-dessous.
 
 ---
 
+## v2026.11.4 — 2026-11-12
+
+Refonte demandée après la première relecture.
+
+- **La France par provinces** : la métropole est découpée en 17 régions historiques reconstituées
+  à partir des départements (domaine royal, Dauphiné, Bourgogne, Provence, Bretagne, Bresse, Béarn,
+  Alsace, Moselle, Roussillon, Flandre, Franche-Comté, Lorraine, Comtat, Corse, Savoie, Nice).
+  Chacune a ses propres dates de rattachement, y compris les coupures alsaciennes de 1871-1918 et
+  1940-1944.
+- **L'Empire napoléonien par régions** : Piémont, Vallée d'Aoste, Ligurie, Toscane, Ombrie, Latium,
+  Belgique, Pays-Bas.
+- **Chronologie à partir de 843** : la Gaule et les Francs disparaissent de la carte (antécédents,
+  plus comptés) ; le curseur ne perd plus les neuf premiers siècles.
+- **Cadrage automatique** : la carte se resserre sur les territoires français de la date et s'élargit
+  quand l'empire s'étend, sans qu'un comptoir lointain ne force le planisphère. Le zoom manuel
+  reprend la main, ⌂ recadre.
+- **Vocabulaire** : « territoires tenus » devient « territoires français » ; la statistique
+  « 8 035 ans cumulés » (dénuée de sens) est supprimée.
+- **Modes renommés** : « Toutes époques » et « À une date », avec libellé de légende et de titre
+  qui suivent la date.
+- **Infobulles réparées** : ancrées sur le territoire, jamais hors champ, contenu adapté quand le
+  territoire n'était pas français à la date affichée ; marqueurs (Clipperton, comptoirs) cliquables.
+- **« Centrer sur la carte »** anime réellement le cadrage.
+- Pays-Bas détachés de leurs communes caribéennes, qui faussaient le cadrage ; orientation des
+  anneaux corrigée pour les nouvelles géométries.
+
 ## v2026.11.3 — 2026-11-12
 
 - Antécédents (Gaule, Francs) rendus en hachures lisibles, avec mention « antécédent » dans le
