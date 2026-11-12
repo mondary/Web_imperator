@@ -4,7 +4,7 @@
 
 # Imperator — The French World
 
-**Version 2026.11.15**
+**Version 2026.11.16**
 
 **An interactive planisphere: how many years did each territory in the world spend under French
 sovereignty?** **Twelve atlases online**: France, United States, United Kingdom, Spain, Portugal, Russia,

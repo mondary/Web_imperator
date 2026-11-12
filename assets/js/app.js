@@ -126,7 +126,17 @@ async function boot() {
   buildLegend();
   buildChips();
   wireChrome();
-  await loadGeo();
+  try {
+    await loadGeo();
+  } catch (err) {
+    const loading = document.getElementById("loading");
+    if (loading) {
+      loading.textContent =
+        "Le planisphère n'a pas pu être chargé. Vérifiez la connexion, puis rechargez la page.";
+    }
+    console.error(err);
+    return;
+  }
   readUrl();
   syncModeUi();
   if (state.selected) showView("detail");

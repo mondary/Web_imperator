@@ -5,6 +5,11 @@ modification ; la version courante est le premier titre ci-dessous.
 
 ---
 
+## v2026.11.16 — 2026-11-12
+
+- Si les données du planisphère ne se chargent pas (réseau, hébergement, filtrage), la page affiche
+  un message explicite au lieu de rester sur « Chargement… ».
+
 ## v2026.11.15 — 2026-11-12
 
 - **Une couleur par empire** : chaque atlas a sa teinte (violet pour la France, brique pour Rome,
