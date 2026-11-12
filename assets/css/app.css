@@ -679,6 +679,10 @@ button { font: inherit; color: inherit; }
 }
 .year-note {
   font-size: 9px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
   letter-spacing: .12em;
   text-transform: uppercase;
   color: var(--muted);

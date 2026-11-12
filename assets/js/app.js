@@ -7,25 +7,30 @@ import { datasets, getDataset } from "./data/index.js";
 /* ------------------------------------------------------------------ données */
 
 const RAMP = ["#ded6ef", "#c6b5e9", "#a488dd", "#8260c7", "#6140aa", "#452a86", "#2b1a5e"];
-const BINS = [
-  { min: 0, max: 10, color: RAMP[0], label: "1 – 9 ans" },
-  { min: 10, max: 50, color: RAMP[1], label: "10 – 49 ans" },
-  { min: 50, max: 100, color: RAMP[2], label: "50 – 99 ans" },
-  { min: 100, max: 250, color: RAMP[3], label: "100 – 249 ans" },
-  { min: 250, max: 500, color: RAMP[4], label: "250 – 499 ans" },
-  { min: 500, max: 800, color: RAMP[5], label: "500 – 799 ans" },
-  { min: 800, max: Infinity, color: RAMP[6], label: "800 ans et plus" },
+
+const DEFAULT_BINS = [
+  { max: 10, color: RAMP[0], label: "1 – 9 ans" },
+  { max: 50, color: RAMP[1], label: "10 – 49 ans" },
+  { max: 100, color: RAMP[2], label: "50 – 99 ans" },
+  { max: 250, color: RAMP[3], label: "100 – 249 ans" },
+  { max: 500, color: RAMP[4], label: "250 – 499 ans" },
+  { max: 800, color: RAMP[5], label: "500 – 799 ans" },
+  { max: Infinity, color: RAMP[6], label: "800 ans et plus" },
 ];
 
-const GROUPS = {
-  metropole: "Métropole",
-  europe: "Europe",
-  amerique: "Amérique",
-  afrique: "Afrique",
-  asie: "Asie",
-  oceanie: "Océanie & océan Indien",
-  antecedent: "Antécédents",
-};
+/** Classes déduites de bornes propres à chaque pays (les durées ne se comparent pas). */
+function binsFromEdges(edges) {
+  return edges.map((max, i) => {
+    const lo = i === 0 ? 1 : edges[i - 1];
+    const label =
+      max === Infinity
+        ? `${lo} ans et plus`
+        : i === 0
+        ? `1 – ${max - 1} ans`
+        : `${lo} – ${max - 1} ans`;
+    return { max, color: RAMP[i], label };
+  });
+}
 
 /** Couleur d'une durée en années. */
 function colorFor(years) {
@@ -39,6 +44,8 @@ const fmt = (n) => n.toLocaleString("fr-FR");
 /* ------------------------------------------------------------------- état */
 
 const ds = getDataset(new URLSearchParams(location.search).get("pays"));
+const GROUPS = ds.groups || { monde: "Territoires" };
+const BINS = ds.binEdges ? binsFromEdges(ds.binEdges) : DEFAULT_BINS;
 const territories = ds.territories.map((t) => ({
   ...t,
   years: totalYears(t),
@@ -125,8 +132,42 @@ function applyDatasetChrome() {
   document.querySelector(".stage-title .kicker").textContent = ds.title;
   document.getElementById("stage-title").textContent = ds.hero.headline;
   document.title = `Imperator — ${ds.title}, ${ds.hero.headline}`;
+  const liveLabel = document.getElementById("live-label");
+  if (liveLabel) liveLabel.textContent = `territoires ${ds.adj?.many || "français"}`;
   const desc = document.querySelector('meta[name="description"]');
   if (desc) desc.setAttribute("content", ds.intro);
+
+  const legendTitle = document.querySelector("#legend h2");
+  if (legendTitle) legendTitle.textContent = `Années sous souveraineté ${ds.sovereignty || "française"}`;
+
+  document.querySelectorAll(".country").forEach((b) => {
+    b.classList.remove("is-active");
+    b.removeAttribute("aria-current");
+    const sm = b.querySelector("small");
+    if (sm && b.dataset.pays !== "france" && b.dataset.pays !== "usa") sm.textContent = "bientôt";
+  });
+
+  const btn = document.querySelector(`.country[data-pays="${ds.id}"]`);
+  if (btn) {
+    btn.classList.add("is-active");
+    btn.setAttribute("aria-current", "page");
+    const small = btn.querySelector("small");
+    if (small) small.textContent = "en ligne";
+  }
+
+  renderAbout();
+}
+
+function renderAbout() {
+  const body = document.querySelector("#about .sheet-body");
+  const a = ds.about;
+  if (!body || !a) return;
+  body.innerHTML =
+    `<p class="kicker">${a.kicker || "Méthode"}</p><h2>${a.title}</h2>` +
+    `<p class="lead">${a.lead}</p>` +
+    a.sections
+      .map((sec) => `<h3>${sec.h}</h3>` + sec.p.map((para) => `<p>${para}</p>`).join(""))
+      .join("");
 }
 
 async function loadGeo() {
@@ -251,9 +292,11 @@ function drawBase() {
     .attr("class", "graticule")
     .attr("d", path(d3.geoGraticule10()));
 
+  // les découpages internes (États américains, provinces canadiennes, régions
+  // italiennes) ne dessinent pas le fond : le pays Natural Earth le fait déjà.
   gBase
     .selectAll("path.land")
-    .data(features)
+    .data(features.filter((f) => !f.subdiv))
     .join("path")
     .attr("class", "land")
     .attr("d", (f) => path(f));
@@ -437,7 +480,7 @@ function updateLabels() {
     const held = isHeld(t);
     const show =
       state.selected === t.id ||
-      ((t.alwaysLabel || t.antecedent) && (state.mode === "cumul" || held));
+      ((t.alwaysLabel || t.antecedent) && (state.mode === "cumul" || held) && width > 640);
     if (!show) continue;
     const p = t.label || anchorOf(t);
     if (!p) continue;
@@ -501,6 +544,7 @@ function applyState() {
       }
     }
 
+    g.style("display", opacity === 0 ? "none" : null);
     g.selectAll("path")
       .attr("fill", fill)
       .attr("fill-opacity", opacity)
@@ -546,7 +590,8 @@ function updateStatus(dateMode) {
   }
   const held = territories.filter((t) => !t.antecedent && heldAt(t, state.year));
   el.hidden = false;
-  el.innerHTML = `<strong>${formatYear(state.year)}</strong> ${held.length} territoire${held.length > 1 ? "s" : ""} français`;
+  const adj = held.length > 1 ? (ds.adj?.many || "français") : (ds.adj?.one || "français");
+  el.innerHTML = `<strong>${formatYear(state.year)}</strong> ${held.length} territoire${held.length > 1 ? "s" : ""} ${adj}`;
 }
 
 function formatYear(y) {
@@ -989,7 +1034,7 @@ function buildTicks() {
 
 function updateTimelineUi() {
   if (state.mode === "date") {
-    document.getElementById("stage-title").textContent = `Le monde français en ${formatYear(state.year)}`;
+    document.getElementById("stage-title").textContent = `${ds.title} en ${formatYear(state.year)}`;
   }
   const slider = document.getElementById("slider");
   if (Number(slider.value) !== state.year) slider.value = String(state.year);
@@ -1034,7 +1079,7 @@ function syncModeUi() {
     b.setAttribute("aria-selected", on ? "true" : "false");
   });
   document.getElementById("stage-title").textContent =
-    state.mode === "date" ? `Le monde français en ${formatYear(state.year)}` : ds.hero.headline;
+    state.mode === "date" ? `${ds.title} en ${formatYear(state.year)}` : ds.hero.headline;
   document.getElementById("legend-foot").textContent =
     state.mode === "date"
       ? `Années de souveraineté accumulées jusqu'en ${formatYear(state.year)} — découpage actuel.`

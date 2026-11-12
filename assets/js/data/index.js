@@ -6,9 +6,11 @@
  */
 
 import { france } from "./france.js";
+import { usa } from "./usa.js";
 
 export const datasets = {
   france,
+  usa,
 };
 
 export function getDataset(id) {

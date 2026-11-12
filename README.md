@@ -5,7 +5,8 @@
 # Imperator — Le monde français
 
 **Un planisphère interactif : combien d'années chaque territoire du monde a-t-il passé sous
-souveraineté française ?** De 843 à aujourd'hui, 73 territoires, un curseur temporel et des fiches sourcées.
+souveraineté française ?** Deux atlas en ligne : **la France** (73 territoires, de 843 à aujourd'hui) et **les États-Unis**
+(21 territoires, de 1776 à aujourd'hui), avec un curseur temporel et des fiches sourcées.
 
 ![Vue cumulée](screenshots/01-cumul.png)
 
@@ -21,7 +22,10 @@ souveraineté française ?** De 843 à aujourd'hui, 73 territoires, un curseur t
   depuis combien d'années.
 - **Cadrage automatique** — la carte se resserre sur la France au IXe siècle et s'élargit au
   planisphère à mesure que l'empire colonial s'étend ; le zoom manuel reprend la main.
-- **73 fiches** — périodes détaillées, nombres d'années par période, note critique, lien source.
+- **Fiches par territoire** — périodes détaillées, nombres d'années par période, note critique, lien source.
+- **Deux pays, un moteur** — `?pays=usa` bascule sur les États-Unis : les acquisitions (Louisiane,
+  cession mexicaine, Alaska, Hawaï…), l'empire d'outre-mer et les interventions. Chaque pays a ses
+  propres classes de couleur, sa méthode et son vocabulaire.
 - **Recherche et filtres** par région, liste classée, barres comparatives.
 - **Carte navigable** — zoom molette, déplacement, recentrage automatique sur un territoire.
 - **Liens partageables** — `?an=1789` ouvre une date, `?t=algerie` une fiche, `#methode` la note
@@ -30,6 +34,7 @@ souveraineté française ?** De 843 à aujourd'hui, 73 territoires, un curseur t
 
 ![Nouvelle-France et Louisiane en 1750](screenshots/02-chronologie.png)
 ![L'Empire napoléonien en 1811](screenshots/05-empire.png)
+![États-Unis en 1848](screenshots/06-etats-unis.png)
 ![Fiche territoire](screenshots/03-fiche.png)
 <img src="screenshots/04-mobile.png" width="360" alt="Vue mobile">
 
@@ -77,7 +82,9 @@ index.html
 assets/
   css/app.css            feuille unique, variables de couleur
   js/app.js              moteur : projection, carte, chronologie, panneau
-  js/data/france.js      ★ les données historiques (le seul fichier à éditer)
+  js/data/france.js      ★ données France
+  js/data/usa.js         ★ données États-Unis
+  js/data/index.js       registre des pays
   data/world.geo.json    contours Natural Earth 50m (683 Ko) + provinces françaises
   vendor/                d3-selection, d3-array, d3-geo (copies locales)
   img/favicon.svg
@@ -87,9 +94,10 @@ screenshots/
 
 ## Ajouter un pays
 
-Le moteur est générique. Ajouter l'Italie, l'Allemagne ou le Portugal revient à écrire un fichier
-de données du même format que `assets/js/data/france.js`, puis à le brancher dans le sélecteur.
-La procédure est décrite dans [docs/ajouter-un-pays.md](docs/ajouter-un-pays.md).
+Le moteur est générique : la France et les États-Unis ne partagent aucun code spécifique, seulement
+un format de données. Ajouter le Royaume-Uni, l'Espagne ou le Portugal revient à écrire un fichier
+du même format, puis à l'inscrire dans le registre. La procédure est décrite dans
+[docs/ajouter-un-pays.md](docs/ajouter-un-pays.md).
 
 ## Sources
 

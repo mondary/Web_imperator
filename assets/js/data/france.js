@@ -23,10 +23,53 @@ export const france = {
   tagline: "Mille deux cents ans de territoires, un seul planisphère.",
   intro:
     "Chaque teinte indique le nombre d'années pendant lesquelles un territoire a été sous souveraineté française — provinces, colonies, comptoirs. Faites glisser le temps pour voir l'ensemble apparaître et se défaire.",
+  groups: {
+    metropole: "Métropole",
+    europe: "Empire",
+    amerique: "Amérique",
+    afrique: "Afrique",
+    asie: "Asie",
+    oceanie: "Océanie & Indien",
+  },
+  about: {
+    kicker: "Méthode",
+    title: "Ce que compte cette carte",
+    lead: "Chaque territoire est coloré selon le nombre d'années pendant lesquelles il a été sous souveraineté française, périodes additionnées, de 843 à aujourd'hui.",
+    sections: [
+      {
+        h: "Le comptage",
+        p: [
+          "Un territoire compte dès qu'une autorité française y exerce la souveraineté : prise de possession, traité, annexion, protectorat ou mandat. Il cesse de compter à la cession, à l'indépendance ou à la perte militaire. Les périodes sont ensuite <strong>additionnées</strong> : Saint-Pierre-et-Miquelon, perdu et rendu trois fois, cumule ses trois occupations.",
+          "<span class=\"aside-note\">Les occupations brèves sans administration durable (débarquements, razzias) sont écartées. Les occupations militaires temporaires qui ont duré (Égypte 1798-1801, Malte 1798-1800) sont incluses et signalées.</span>",
+        ],
+      },
+      {
+        h: "Pourquoi 1 183 ans et pas 843 ?",
+        p: ["La carte virale qui a inspiré ce site affiche « 843 ans » pour la France métropolitaine : c'est une confusion entre l'année de départ (843, traité de Verdun) et une durée. De 843 à 2026, il y a 1 183 ans. Nous gardons 843 comme point de départ, mais nous comptons les années."],
+      },
+      {
+        h: "Les frontières",
+        p: [
+          "La France n'est pas dessinée d'un bloc : la métropole est découpée en <strong>provinces historiques</strong> (Dauphiné 1349, Bourgogne 1477, Provence 1481, Bretagne 1532, Bresse 1601, Béarn 1620, Alsace 1648, Roussillon 1659, Flandre 1659, Franche-Comté 1678, Lorraine 1766, Comtat 1791, Corse 1768, Savoie et Nice 1860…), reconstituées à partir des départements actuels. L'Empire napoléonien est de même figuré par régions : Piémont, Ligurie, Toscane, Ombrie, Latium, Belgique, Pays-Bas.",
+          "Ailleurs, les contours restent ceux d'aujourd'hui : la Nouvelle-France est figurée par les provinces et États actuels qu'elle recouvrait en partie ; l'emprise réelle était plus lâche, faite de postes, de forts et d'alliances. La carte mesure donc une <em>présence</em>, pas une ligne de front.",
+          "La chronologie commence en 843, à la naissance de la Francie occidentale : la Gaule romaine et le royaume franc sont des antécédents, pas la France.",
+        ],
+      },
+      {
+        h: "Les sources",
+        p: ["Chaque fiche renvoie à sa page Wikipédia, point de départ vérifiable. Les dates retenues sont les plus couramment admises ; elles sont discutables, et c'est écrit dans les notes quand c'est le cas."],
+      },
+      {
+        h: "Et les autres pays ?",
+        p: ["Le moteur est générique : chaque pays est un fichier de données du même format. Les États-Unis sont déjà en ligne ; le Royaume-Uni, l'Espagne, le Portugal et la Russie suivent."],
+      },
+    ],
+  },
   startYear: 843,
   endYear: 2026,
   defaultYear: 2026,
   origin: 843,
+  adj: { one: "français", many: "français" },
   hero: {
     headline: "843 – aujourd'hui",
     note: "La date de 843 (traité de Verdun) marque la naissance de la Francie occidentale, matrice du royaume de France. C'est elle qui sert de point de départ au décompte de la métropole.",

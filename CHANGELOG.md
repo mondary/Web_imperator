@@ -5,6 +5,26 @@ modification ; la version courante est le premier titre ci-dessous.
 
 ---
 
+## v2026.11.7 — 2026-11-12
+
+Deuxième atlas : **les États-Unis**.
+
+- **Jeu de données américain** (21 territoires) : treize colonies (1776), cessions de 1783,
+  Louisiane (1803), Floride (1819), Texas (1845), Oregon (1846), cession mexicaine (1848),
+  Alaska (1867), Hawaï (1898), puis l'outre-mer (Philippines, Porto Rico, Guam, Samoa, îles
+  Vierges, Mariannes, canal de Panama, Guantanamo) et les interventions (Cuba, Japon, Irak,
+  Afghanistan).
+- **Moteur multi-pays** : chaque jeu de données porte son titre, sa méthode, son vocabulaire
+  (« territoires français » / « américains »), ses classes de couleur et ses groupes de filtre.
+  Le dialogue « Méthode » est généré depuis les données, plus écrit dans le HTML.
+- **Classes de couleur par pays** : les durées ne se comparent pas d'un empire à l'autre — 250 ans
+  est un record aux États-Unis, une durée moyenne en France.
+- **Correction de fond** : la couche « territoires » ne dessine plus les contours des territoires
+  invisibles (fill-opacity à zéro laissait les traits). La carte est nettement plus propre.
+- Les découpages internes (États américains, provinces canadiennes, régions italiennes) ne sont
+  plus dessinés dans le fond de carte : le pays Natural Earth s'en charge.
+- Les 50 États américains sont désormais disponibles en géométrie pour les prochains jeux.
+
 ## v2026.11.6 — 2026-11-12
 
 - **Lecture à vitesse variable** : le temps de lecture n'est plus proportionnel aux années mais à

@@ -262,6 +262,15 @@ NAME_TO_ID = {
     "Brazil": "bresil",
     "Suriname": "suriname",
     "China": "chine",
+    "Philippines": "philippines",
+    "Cuba": "cuba",
+    "Japan": "japon",
+    "Iraq": "irak",
+    "Afghanistan": "afghanistan",
+    "Panama": "panama",
+    "Dominican Rep.": "republique-dominicaine",
+    "Haiti": "haiti",
+    "Nicaragua": "nicaragua",
 }
 
 # morceaux de la France d'outre-mer à extraire du multipolygone "France"
@@ -327,20 +336,26 @@ for c in countries:
                   "country": cid or None, "geometry": geom})
 
 # --- États-Unis (pour la Louisiane) --------------------------------------
-US_KEEP = {
-    "05": "arkansas", "22": "louisiane-etat", "29": "missouri", "19": "iowa",
-    "20": "kansas", "31": "nebraska", "46": "dakota-sud", "38": "dakota-nord",
-    "40": "oklahoma", "27": "minnesota", "55": "wisconsin", "17": "illinois",
-    "18": "indiana", "26": "michigan", "39": "ohio",
-}
+import unicodedata
+
+US_ID_OVERRIDES = {"Louisiana": "louisiane-etat", "North Dakota": "dakota-nord",
+                   "South Dakota": "dakota-sud", "District of Columbia": None}
+
+
+def slug(name):
+    n = unicodedata.normalize("NFD", name).encode("ascii", "ignore").decode()
+    return n.lower().replace(" ", "-").replace("'", "").replace(".", "")
+
+
 for s in us_states:
-    sid = US_KEEP.get(str(s["id"]))
+    nm = s["properties"].get("name", "")
+    sid = US_ID_OVERRIDES.get(nm, slug(nm))
     if not sid:
         continue
     g = simplify_geometry(poly_of(s["geometry"]), 0.02)
     if g:
         feats.append({"id": "us-" + sid, "name": s["properties"].get("name", sid),
-                      "country": "usa", "geometry": g})
+                      "country": "usa", "subdiv": True, "geometry": g})
 
 # --- Canada (pour la Nouvelle-France) -----------------------------------
 CA_KEEP = {
@@ -354,7 +369,7 @@ for f in canada_feats:
         continue
     g = simplify_geometry(poly_of(f["geometry"]), 0.02)
     if g:
-        feats.append({"id": "ca-" + CA_KEEP[n], "name": n, "country": "canada", "geometry": g})
+        feats.append({"id": "ca-" + CA_KEEP[n], "name": n, "country": "canada", "subdiv": True, "geometry": g})
 
 # --- France par régions historiques (départements fusionnés) --------------
 # Source : france-geojson (départements simplifiés) puis dissolution par groupe.
@@ -442,7 +457,8 @@ for f in json.load(open(it_simplified))["features"]:
     geom = f["geometry"]
     if geom["type"] == "Polygon":
         geom = {"type": "MultiPolygon", "coordinates": [geom["coordinates"]]}
-    feats.append({"id": IT_IDS[name], "name": name, "country": "italie", "geometry": fix_winding(geom)})
+    feats.append({"id": IT_IDS[name], "name": name, "country": "italie", "subdiv": True,
+                  "geometry": fix_winding(geom)})
 
 # --- Terre Adélie : absente de Natural Earth 50m, ajoutée à la main -------
 ADELIE = {
@@ -459,6 +475,8 @@ def clean(f):
     out = {"id": f["id"], "name": f["name"], "geometry": f["geometry"]}
     if f.get("country"):
         out["country"] = f["country"]
+    if f.get("subdiv"):
+        out["subdiv"] = True
     return out
 
 feats = [f for f in feats if f.get("geometry")]
