@@ -53,7 +53,7 @@ export const italie = {
         h: "Colonies et occupations",
         p: [
           "L'Érythrée (1890-1941), la Somalie (1889-1941), la Libye (1911-1943) sont des colonies ; l'Éthiopie (1936-1941) et l'Albanie (1939-1943) des annexions ; le Dodécanèse (1912-1943) une occupation de longue durée.",
-          "<span class=\"aside-note\">L'Empire romain n'est pas traité ici : ce serait un atlas à part entière, avec des frontières provinciales antiques. Il reste le projet le plus ambitieux qui reste à faire.</span>",
+          "<span class=\"aside-note\">L'Empire romain a son propre atlas (« Rome ») : quatorze siècles séparent la chute de l'Occident de l'unification italienne, les fusionner donnerait une chronologie aux deux tiers vide.</span>",
         ],
       },
       {

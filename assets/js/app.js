@@ -313,7 +313,6 @@ function drawTerritories() {
       const bb = path.bounds({ type: "FeatureCollection", features: geoms });
       if (Number.isFinite(bb[0][0]) && Number.isFinite(bb[1][0])) t._b = bb;
     }
-    if (t.id === "gaule" || t.id === "francs") g.classed("hatch", true);
 
     g.on("pointerenter", (ev) => onHover(t, ev))
       .on("pointermove", (ev) => moveTooltip(ev))

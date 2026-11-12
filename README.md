@@ -5,9 +5,9 @@
 # Imperator — Le monde français
 
 **Un planisphère interactif : combien d'années chaque territoire du monde a-t-il passé sous
-souveraineté française ?** **Onze atlas en ligne** : France, États-Unis, Royaume-Uni, Espagne, Portugal, Russie, Pays-Bas,
-Empire ottoman, Allemagne, Italie, Japon — 278 territoires au total, un curseur temporel et des
-fiches sourcées.
+souveraineté française ?** **Douze atlas en ligne** : France, États-Unis, Royaume-Uni, Espagne, Portugal, Russie, Pays-Bas,
+Empire ottoman, Allemagne, Italie, Japon, Rome — 295 territoires au total, un curseur temporel et
+des fiches sourcées.
 
 ![Vue cumulée](screenshots/01-cumul.png)
 
@@ -38,6 +38,7 @@ fiches sourcées.
 ![États-Unis en 1848](screenshots/06-etats-unis.png)
 ![Empire britannique en 1920](screenshots/07-royaume-uni.png)
 ![Empire ottoman en 1680](screenshots/08-ottoman.png)
+![Rome en 117](screenshots/10-rome.png)
 ![Fiche territoire](screenshots/03-fiche.png)
 <img src="screenshots/04-mobile.png" width="360" alt="Vue mobile">
 

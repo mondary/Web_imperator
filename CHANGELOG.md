@@ -5,6 +5,16 @@ modification ; la version courante est le premier titre ci-dessous.
 
 ---
 
+## v2026.11.13 — 2026-11-12
+
+- **Atlas de Rome** (17 territoires, 509 av. J.-C. – 1453) : Italie, Hispanie, Gaule, Bretagne,
+  Rhétie, Dalmatie, Dacie, Mésie, Grèce, Anatolie, Syrie, Égypte, Cyrénaïque, Afrique, Numidie,
+  Maurétanie, Chypre. Le record est la Grèce, 1 599 ans.
+- Rome reste **séparée de l'Italie** : quatorze siècles séparent la chute de l'Occident de
+  l'unification italienne, une fusion donnerait une chronologie aux deux tiers vide. C'est le même
+  choix que la Gaule, traitée comme antécédent de la France.
+- Suppression du remplissage hachuré hérité des antécédents, qui recouvrait la Gaule romaine.
+
 ## v2026.11.12 — 2026-11-12
 
 - Indicateur de chargement présent dès le HTML (plus de carte vide au premier affichage).

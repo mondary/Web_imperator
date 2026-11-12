@@ -16,6 +16,7 @@ import { ottoman } from "./ottoman.js";
 import { japon } from "./japon.js";
 import { allemagne } from "./allemagne.js";
 import { italie } from "./italie.js";
+import { rome } from "./rome.js";
 
 export const datasets = {
   france,
@@ -29,6 +30,7 @@ export const datasets = {
   japon,
   allemagne,
   italie,
+  rome,
 };
 
 export function getDataset(id) {
