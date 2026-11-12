@@ -178,17 +178,17 @@ function setupMap() {
   defs
     .append("pattern")
     .attr("id", "hatch")
-    .attr("width", 5)
-    .attr("height", 5)
+    .attr("width", 4)
+    .attr("height", 4)
     .attr("patternTransform", "rotate(45)")
     .attr("patternUnits", "userSpaceOnUse")
     .append("line")
     .attr("x1", 0)
     .attr("y1", 0)
     .attr("x2", 0)
-    .attr("y2", 5)
-    .attr("stroke", "#8a8271")
-    .attr("stroke-width", 1.4);
+    .attr("y2", 4)
+    .attr("stroke", "#57503f")
+    .attr("stroke-width", 2.2);
 
   viewport = svg.append("g").attr("class", "viewport");
   gBase = viewport.append("g").attr("class", "basemap");
@@ -378,8 +378,8 @@ function applyState() {
 
     if (shown) {
       if (t.antecedent) {
-        fill = "#8a8271";
-        opacity = 0.25;
+        fill = "url(#hatch)";
+        opacity = 1;
       } else if (dateMode) {
         if (held) {
           fill = colorFor(Math.max(1, yearsAt(t, year)));
@@ -439,6 +439,11 @@ function updateStatus(dateMode) {
   }
   const held = territories.filter((t) => !t.antecedent && heldAt(t, state.year));
   el.hidden = false;
+  if (state.year < 843) {
+    const a = territories.filter((t) => t.antecedent && heldAt(t, state.year)).pop();
+    el.innerHTML = `<strong>${formatYear(state.year)}</strong> ${a ? a.name : "avant la France"} <span style="opacity:.55">· antécédent</span>`;
+    return;
+  }
   el.innerHTML = `<strong>${formatYear(state.year)}</strong> ${held.length} territoire${held.length > 1 ? "s" : ""} tenu${held.length > 1 ? "s" : ""}`;
 }
 
@@ -495,6 +500,7 @@ function visibleTerritories() {
   const q = strip(state.query.trim());
   return territories
     .filter((t) => (state.filter === "all" ? !t.antecedent : t.group === state.filter))
+    .filter((t) => state.mode !== "date" || yearsAt(t, state.year) > 0)
     .filter((t) => !q || strip(t.name).includes(q) || strip(t.short || "").includes(q))
     .sort((a, b) => valueOf(b) - valueOf(a) || a.name.localeCompare(b.name, "fr"));
 }
@@ -536,7 +542,11 @@ function updateList() {
   });
 
   if (!rows.length) {
-    host.innerHTML = `<li style="padding:20px 10px;color:var(--muted);font-size:12px">Aucun territoire ne correspond.</li>`;
+    const msg =
+      state.mode === "date" && !state.query
+        ? `Aucun territoire français en ${formatYear(state.year)}.`
+        : "Aucun territoire ne correspond.";
+    host.innerHTML = `<li style="padding:22px 10px;color:var(--muted);font-size:12px;line-height:1.5">${msg}</li>`;
   }
 }
 

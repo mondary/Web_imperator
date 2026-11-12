@@ -240,7 +240,7 @@ button { font: inherit; color: inherit; }
 }
 .terr.dim path { opacity: .28; }
 .terr.sel path { stroke: var(--accent); stroke-width: 2px; paint-order: stroke; vector-effect: non-scaling-stroke; }
-.terr.hatch path { fill: url(#hatch); opacity: .55; }
+.terr.hatch path { fill: url(#hatch); }
 
 .marker { pointer-events: none; }
 .marker circle {

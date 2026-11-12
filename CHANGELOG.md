@@ -5,6 +5,15 @@ modification ; la version courante est le premier titre ci-dessous.
 
 ---
 
+## v2026.11.3 — 2026-11-12
+
+- Antécédents (Gaule, Francs) rendus en hachures lisibles, avec mention « antécédent » dans le
+  bandeau d'état.
+- En chronologie, la liste ne garde que les territoires déjà concernés, avec un message explicite
+  quand aucun ne l'est encore.
+- Version 2026.11.2 : légende déplacée en bas à droite, bandeau compact sur mobile, libellés
+  masqués pour les territoires non tenus, frise des fiches recadrée, traits à épaisseur constante.
+
 ## v2026.11.2 — 2026-11-12
 
 - Légende déplacée en bas à droite pour dégager l'Asie ; bandeau compact sur mobile.
