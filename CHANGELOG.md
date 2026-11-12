@@ -5,6 +5,11 @@ modification ; la version courante est le premier titre ci-dessous.
 
 ---
 
+## v2026.11.5 — 2026-11-12
+
+- Infobulle de la liste ancrée sur le centre réel du territoire (moyenne de tous ses polygones),
+  au lieu de son premier fragment.
+
 ## v2026.11.4 — 2026-11-12
 
 Refonte demandée après la première relecture.

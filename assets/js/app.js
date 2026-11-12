@@ -454,9 +454,9 @@ function updateLabels() {
 }
 
 function anchorOf(t) {
-  const f = (t.geo || []).map((id) => featureById.get(id)).find(Boolean);
-  if (f) {
-    const c = d3.geoCentroid(f);
+  const fs = (t.geo || []).map((id) => featureById.get(id)).filter(Boolean);
+  if (fs.length) {
+    const c = d3.geoCentroid({ type: "FeatureCollection", features: fs });
     return [c[0], c[1]];
   }
   const pts = t.markers || (t.marker ? [t.marker] : []);
