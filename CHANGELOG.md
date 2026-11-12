@@ -5,6 +5,17 @@ modification ; la version courante est le premier titre ci-dessous.
 
 ---
 
+## v2026.11.14 — 2026-11-12
+
+- **Lecture stabilisée** : la courbe de rythme est lissée sur ±22 ans. La vitesse varie par époques,
+  plus d'une année sur l'autre ; fini l'impression de vitesse aléatoire.
+- **Cadrage apaisé** : le cadre ne se réajuste plus qu'au changement du nombre de territoires (et
+  sur un saut manuel de plus de 90 ans), avec un suivi plus doux pendant la lecture.
+- **Liste rafraîchie sur une horloge** (200 ms) au lieu du nombre d'années : plus de micro-saccades.
+- **Bouton « rythme adapté / régulier »** sous le compteur, pour revenir à une vitesse constante.
+- Rome et l'Empire ottoman sont voisins dans le sélecteur ; la méthode ottomane explique la
+  revendication du titre romain (*Kayser-i Rûm*) et les atlas renvoient l'un à l'autre.
+
 ## v2026.11.13 — 2026-11-12
 
 - **Atlas de Rome** (17 territoires, 509 av. J.-C. – 1453) : Italie, Hispanie, Gaule, Bretagne,

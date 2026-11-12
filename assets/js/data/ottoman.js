@@ -20,6 +20,10 @@ export const ottoman = {
     headline: "1299 – 1922",
     note: "1299 : fondation de la dynastie par Osman. L'empire s'éteint en 1922, après 623 ans et la Première Guerre mondiale.",
   },
+  related: [
+    { id: "rome", label: "Rome — dont il reprend la capitale et le titre" },
+    { id: "italie", label: "Italie — l'autre héritière de la Méditerranée" },
+  ],
   groups: {
     anatolie: "Anatolie & Levant",
     balkans: "Balkans",
@@ -55,6 +59,14 @@ export const ottoman = {
         p: [
           "La carte compte les provinces administrées par la Porte (eyalets, vilayets) : Grèce, Bulgarie, Serbie, Syrie, Égypte, Maghreb. Les principautés vassales (Valachie, Moldavie, khanat de Crimée) sont comptées lorsqu'elles étaient militairement tenues, avec une note.",
           "<span class=\"aside-note\">L'Égypte est comptée jusqu'en 1882 (occupation britannique) bien qu'autonome depuis 1805 : la souveraineté nominale restait ottomane jusqu'en 1914.</span>",
+        ],
+      },
+      {
+        h: "L'Empire ottoman est-il la suite de Rome ?",
+        p: [
+          "En 1453, Mehmed II prend Constantinople et se proclame <strong>Kayser-i Rûm</strong>, césar des Romains : les Ottomans reprennent le titre impérial, conservent le patriarcat et administrent les orthodoxes comme le « millet de Rûm ». Rumeli — la Roumélie — désigne encore la Turquie d'Europe.",
+          "Mais c'est une <strong>revendication par conquête</strong>, pas une continuité d'État : la dynastie est turque et musulmane, fondée vers 1299, et l'Empire romain d'Orient s'éteint juridiquement en 1453. Trois pouvoirs se sont d'ailleurs disputé l'héritage : le Saint-Empire romain germanique, les Ottomans, et la Russie, « troisième Rome » après le mariage d'Ivan III avec la nièce du dernier empereur byzantin.",
+          "D'où deux atlas distincts et voisins : Rome jusqu'en 1453, l'Empire ottoman à partir de 1299 — les deux se chevauchent pendant 154 ans.",
         ],
       },
       {

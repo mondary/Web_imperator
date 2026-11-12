@@ -805,6 +805,21 @@ input[type="range"]::-moz-range-thumb {
   font-variant-numeric: tabular-nums;
 }
 .live-l { font-size: 8.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.pace {
+  margin-top: 6px;
+  border: 0;
+  background: none;
+  padding: 0;
+  font-size: 9.5px;
+  letter-spacing: .03em;
+  color: var(--muted);
+  text-decoration: underline;
+  text-decoration-color: #cfc5ae;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.pace:hover { color: var(--ink); }
+.pace.is-linear { color: var(--accent); }
 
 /* ------------------------------------------------------------------ sheet */
 .sheet {
@@ -852,6 +867,8 @@ input[type="range"]::-moz-range-thumb {
 }
 .sheet-body p { font-size: 13.5px; line-height: 1.6; color: var(--ink-soft); margin: 0 0 8px; }
 .sheet-body .lead { font-family: var(--serif); font-size: 17px; line-height: 1.5; color: var(--ink); }
+.related { display: flex; flex-wrap: wrap; gap: 8px; }
+
 .sheet-body .aside-note {
   border-left: 2px solid var(--line);
   padding-left: 12px;

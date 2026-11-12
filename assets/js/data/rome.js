@@ -20,6 +20,10 @@ export const rome = {
     headline: "509 av. J.-C. – 1453",
     note: "509 avant notre ère : expulsion des rois, naissance de la République. 1453 : Constantinople tombe aux mains des Ottomans — l'Empire romain d'Orient aura duré jusqu'au bout.",
   },
+  related: [
+    { id: "ottoman", label: "Empire ottoman — 1453, la conquête de Constantinople" },
+    { id: "italie", label: "Italie — l'État moderne sur le même sol" },
+  ],
   groups: {
     italie: "Italie",
     occident: "Occident",
@@ -68,6 +72,7 @@ export const rome = {
         h: "Rome dure jusqu'en 1453",
         p: [
           "L'Empire d'Occident tombe en 476, mais l'Empire d'Orient — que nous appelons byzantin — se dit romain jusqu'au bout. La carte suit cette continuité : la Grèce, l'Anatolie ou Chypre restent comptées jusqu'en 1453, tandis que la Gaule, l'Hispanie ou l'Afrique s'arrêtent aux invasions du Ve siècle.",
+          "Le 29 mai 1453, Mehmed II prend Constantinople et se proclame <em>Kayser-i Rûm</em>. L'Empire ottoman revendique dès lors l'héritage romain — c'est pourquoi son atlas est placé juste à côté de celui-ci.",
           "<span class=\"aside-note\">La Dacie (Roumanie) est un cas rare : conquise en 106, abandonnée en 271 — 165 ans, puis plus rien.</span>",
         ],
       },

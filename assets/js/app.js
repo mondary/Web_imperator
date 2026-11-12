@@ -60,6 +60,7 @@ const state = {
   playing: false,
   zoom: { k: 1, x: 0, y: 0 },
   playPos: 0,
+  pace: "auto",
   focus: null,
   autoFrame: true,
   frameTarget: null,
@@ -167,7 +168,12 @@ function renderAbout() {
     `<p class="lead">${a.lead}</p>` +
     a.sections
       .map((sec) => `<h3>${sec.h}</h3>` + sec.p.map((para) => `<p>${para}</p>`).join(""))
-      .join("");
+      .join("") +
+    (ds.related?.length
+      ? `<h3>Atlas voisins</h3><div class="related">` +
+        ds.related.map((r) => `<a class="d-btn" href="?pays=${r.id}">${r.label}</a>`).join("") +
+        `</div>`
+      : "");
 }
 
 async function loadGeo() {
@@ -432,8 +438,9 @@ function frameTargetFor() {
   return { k, x: width / 2 - cx * k, y: height / 2 - cy * k };
 }
 
-function animateTo(target) {
+function animateTo(target, alpha = 0.16) {
   state.frameTarget = target;
+  state.frameAlpha = alpha;
   if (state.frameRaf) {
     cancelAnimationFrame(state.frameRaf);
     state.frameRaf = null;
@@ -442,7 +449,7 @@ function animateTo(target) {
     const t = state.frameTarget;
     if (!t) { state.frameRaf = null; return; }
     const p = state.zoom;
-    const a = 0.16;
+    const a = state.frameAlpha || 0.16;
     p.k += (t.k - p.k) * a;
     p.x += (t.x - p.x) * a;
     p.y += (t.y - p.y) * a;
@@ -464,7 +471,8 @@ function animateTo(target) {
 
 function updateAutoFrame() {
   if (!state.autoFrame) return;
-  animateTo(frameTargetFor());
+  // pendant la lecture, on suit la cible lentement pour éviter les à-coups
+  animateTo(frameTargetFor(), state.playing ? 0.07 : 0.16);
 }
 
 function project([lon, lat]) {
@@ -576,7 +584,15 @@ function applyState() {
   writeUrl();
   updateStatus(dateMode);
   updateTimelineUi();
-  updateAutoFrame();
+
+  // le cadre ne bouge que si le nombre de territoires change (ou si on saute loin)
+  const heldCount = territories.filter((t) => !t.antecedent && heldAt(t, state.year)).length;
+  const jump = Math.abs(state.year - (state.lastFrameYear ?? -1e9)) > 90;
+  if (heldCount !== state.lastHeld || jump) {
+    state.lastHeld = heldCount;
+    state.lastFrameYear = state.year;
+    updateAutoFrame();
+  }
 }
 
 function updateHeader() {
@@ -655,12 +671,13 @@ function visibleTerritories() {
     .sort((a, b) => valueOf(b) - valueOf(a) || a.name.localeCompare(b.name, "fr"));
 }
 
-let lastListYear = null;
+let lastListAt = 0;
 
 function updateList() {
-  // pendant la lecture, on ne reconstruit pas 50 lignes à chaque image
-  if (state.playing && lastListYear !== null && Math.abs(state.year - lastListYear) < 3) return;
-  lastListYear = state.year;
+  // pendant la lecture, on ne reconstruit pas la liste à chaque image
+  const now = performance.now();
+  if (state.playing && now - lastListAt < 200) return;
+  lastListAt = now;
   const host = document.getElementById("list");
   const rows = visibleTerritories();
   const max = Math.max(1, ...rows.map((t) => valueOf(t)));
@@ -974,6 +991,14 @@ function wireTimeline() {
   });
 
   document.getElementById("play").addEventListener("click", togglePlay);
+  const paceBtn = document.getElementById("pace");
+  if (paceBtn) {
+    paceBtn.addEventListener("click", () => {
+      state.pace = state.pace === "auto" ? "linear" : "auto";
+      paceBtn.textContent = state.pace === "auto" ? "rythme adapté" : "rythme régulier";
+      paceBtn.classList.toggle("is-linear", state.pace === "linear");
+    });
+  }
 
   const phases = document.getElementById("phase-row");
   phases.innerHTML = "";
@@ -1120,10 +1145,20 @@ function buildPlaybackCurve() {
     }
   }
 
+  // lissage : la vitesse doit varier par époques, pas d'une année sur l'autre
+  const radius = 22;
+  const prefix = new Float64Array(n + 1);
+  for (let i = 0; i < n; i++) prefix[i + 1] = prefix[i] + activity[i];
+  const smooth = new Float64Array(n);
+  for (let i = 0; i < n; i++) {
+    const lo = Math.max(0, i - radius);
+    const hi = Math.min(n, i + radius + 1);
+    smooth[i] = (prefix[hi] - prefix[lo]) / (hi - lo);
+  }
+
   const cum = new Float64Array(n + 1);
   for (let i = 0; i < n; i++) {
-    // 0.15 = traversée rapide d'un siècle creux ; 3.6 = poids d'une année chargée
-    cum[i + 1] = cum[i] + 0.15 + 3.6 * Math.sqrt(Math.min(activity[i], 10));
+    cum[i + 1] = cum[i] + 0.2 + 3.4 * Math.sqrt(smooth[i]);
   }
   playCurve = { n, cum, total: cum[n] };
 }
@@ -1184,6 +1219,19 @@ function tick(ts) {
   last = ts;
 
   state.playPos = (state.playPos || 0) + dt / PLAY_MS;
+  if (state.pace === "linear") {
+    const y = ds.startYear + state.playPos * (ds.endYear - ds.startYear);
+    if (state.playPos >= 1) {
+      setYear(ds.endYear);
+      state.playing = false;
+      document.getElementById("play").classList.remove("is-playing");
+      rafId = null;
+      return;
+    }
+    setYear(y);
+    rafId = requestAnimationFrame(tick);
+    return;
+  }
   if (state.playPos >= 1) {
     setYear(ds.endYear);
     state.playing = false;
