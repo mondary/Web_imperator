@@ -14,6 +14,7 @@ export const espagne = {
   defaultYear: 2026,
   origin: 1492,
   adj: { one: "espagnol", many: "espagnols" },
+  palette: { h: 40, s: 62 },
   sovereignty: "espagnole",
   binEdges: [50, 100, 150, 200, 250, 300, Infinity],
   hero: {

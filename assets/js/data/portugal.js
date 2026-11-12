@@ -14,6 +14,7 @@ export const portugal = {
   defaultYear: 2026,
   origin: 1415,
   adj: { one: "portugais", many: "portugais" },
+  palette: { h: 150, s: 48 },
   sovereignty: "portugaise",
   binEdges: [75, 150, 225, 300, 375, 450, Infinity],
   hero: {

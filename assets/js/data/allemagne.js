@@ -14,6 +14,7 @@ export const allemagne = {
   defaultYear: 2026,
   origin: 1871,
   adj: { one: "allemand", many: "allemands" },
+  palette: { h: 28, s: 9 },
   sovereignty: "allemande",
   binEdges: [10, 20, 30, 40, 50, 70, Infinity],
   hero: {

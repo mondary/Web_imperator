@@ -14,6 +14,7 @@ export const russie = {
   defaultYear: 2026,
   origin: 1552,
   adj: { one: "russe", many: "russes" },
+  palette: { h: 158, s: 26 },
   sovereignty: "russe",
   binEdges: [75, 150, 225, 300, 375, 450, Infinity],
   hero: {

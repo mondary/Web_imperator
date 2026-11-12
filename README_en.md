@@ -4,6 +4,8 @@
 
 # Imperator — The French World
 
+**Version 2026.11.15**
+
 **An interactive planisphere: how many years did each territory in the world spend under French
 sovereignty?** **Twelve atlases online**: France, United States, United Kingdom, Spain, Portugal, Russia,
 Netherlands, Ottoman Empire, Germany, Italy, Japan, Rome — 295 territories in all, with a time

@@ -14,6 +14,7 @@ export const japon = {
   defaultYear: 2026,
   origin: 1895,
   adj: { one: "japonais", many: "japonais" },
+  palette: { h: 0, s: 55 },
   sovereignty: "japonaise",
   binEdges: [10, 20, 30, 40, 50, 100, Infinity],
   hero: {

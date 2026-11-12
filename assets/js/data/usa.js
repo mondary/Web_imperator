@@ -29,6 +29,7 @@ export const usa = {
   defaultYear: 2026,
   origin: 1776,
   adj: { one: "américain", many: "américains" },
+  palette: { h: 224, s: 44 },
   sovereignty: "américaine",
   binEdges: [25, 50, 100, 150, 200, 250, Infinity],
   hero: {

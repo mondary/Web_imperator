@@ -6,7 +6,20 @@ import { datasets, getDataset } from "./data/index.js";
 
 /* ------------------------------------------------------------------ données */
 
-const RAMP = ["#ded6ef", "#c6b5e9", "#a488dd", "#8260c7", "#6140aa", "#452a86", "#2b1a5e"];
+const ds = getDataset(new URLSearchParams(location.search).get("pays"));
+
+/* Chaque pays a sa teinte : la couleur est l'identité de l'atlas, la clarté
+   code la durée. Sept paliers du plus clair au plus sombre. */
+const LIGHTS = [93, 82.5, 71, 58, 45.5, 34, 22.5];
+const SATS = [0.6, 0.82, 0.92, 1, 1.04, 1.06, 1.02];
+const FALLBACK = { h: 262, s: 46 };
+
+function rampFromPalette(p) {
+  const palette = p || FALLBACK;
+  return LIGHTS.map((l, i) => `hsl(${palette.h} ${Math.min(88, palette.s * SATS[i])}% ${l}%)`);
+}
+
+const RAMP = rampFromPalette(ds.palette);
 
 const DEFAULT_BINS = [
   { max: 10, color: RAMP[0], label: "1 – 9 ans" },
@@ -43,7 +56,6 @@ const fmt = (n) => n.toLocaleString("fr-FR");
 
 /* ------------------------------------------------------------------- état */
 
-const ds = getDataset(new URLSearchParams(location.search).get("pays"));
 const GROUPS = ds.groups || { monde: "Territoires" };
 const BINS = ds.binEdges ? binsFromEdges(ds.binEdges) : DEFAULT_BINS;
 const territories = ds.territories.map((t) => ({
@@ -133,6 +145,10 @@ function applyDatasetChrome() {
   document.querySelector(".stage-title .kicker").textContent = ds.title;
   document.getElementById("stage-title").textContent = ds.hero.headline;
   document.title = `Imperator — ${ds.title}, ${ds.hero.headline}`;
+  if (ds.palette) {
+    document.documentElement.style.setProperty("--country", `hsl(${ds.palette.h} ${Math.min(70, ds.palette.s * 1.1)}% 42%)`);
+    document.documentElement.style.setProperty("--country-soft", `hsl(${ds.palette.h} ${Math.min(60, ds.palette.s)}% 92%)`);
+  }
   const liveLabel = document.getElementById("live-label");
   if (liveLabel) liveLabel.textContent = `territoires ${ds.adj?.many || "français"}`;
   const desc = document.querySelector('meta[name="description"]');
@@ -173,7 +189,9 @@ function renderAbout() {
       ? `<h3>Atlas voisins</h3><div class="related">` +
         ds.related.map((r) => `<a class="d-btn" href="?pays=${r.id}">${r.label}</a>`).join("") +
         `</div>`
-      : "");
+      : "") +
+    `<p class="support">Imperator est libre, sans publicité et sans traqueur. ` +
+    `<a href="https://ko-fi.com/pouark" target="_blank" rel="noopener">Offrir un café</a>.</p>`;
 }
 
 async function loadGeo() {

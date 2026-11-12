@@ -14,6 +14,7 @@ export const italie = {
   defaultYear: 2026,
   origin: 1882,
   adj: { one: "italien", many: "italiens" },
+  palette: { h: 208, s: 52 },
   sovereignty: "italienne",
   binEdges: [5, 10, 20, 30, 40, 50, Infinity],
   hero: {

@@ -14,6 +14,7 @@ export const rome = {
   defaultYear: 117,
   origin: -509,
   adj: { one: "romain", many: "romains" },
+  palette: { h: 14, s: 48 },
   sovereignty: "romaine",
   binEdges: [200, 400, 600, 800, 1000, 1200, Infinity],
   hero: {

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Imperator — atlas des souverainetés</title>
+<meta name="description" content="Douze atlas interactifs : France, Rome, Ottomans, Royaume-Uni, Espagne, Portugal, Russie, Pays-Bas, Allemagne, Italie, Japon, États-Unis. Combien d'années chaque territoire a-t-il passé sous souveraineté étrangère ?">
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<style>
+  :root {
+    --ink: #16150f;
+    --paper: #f3efe6;
+    --muted: #a49c88;
+    --line: #3a372e;
+    --accent: #c8452a;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--ink); color: var(--paper);
+    font-family: var(--sans); font-size: 16px; line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+  header { display: flex; align-items: center; justify-content: space-between; padding: 26px 0; border-bottom: 1px solid var(--line); }
+  .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+  .brand svg { width: 30px; height: 30px; }
+  .brand strong { font-family: var(--serif); font-size: 20px; letter-spacing: .18em; text-transform: uppercase; font-weight: 500; }
+  .lang { display: flex; gap: 6px; }
+  .lang button {
+    background: none; border: 1px solid var(--line); color: var(--muted);
+    border-radius: 999px; padding: 5px 11px; font-size: 11px; letter-spacing: .08em;
+    text-transform: uppercase; cursor: pointer;
+  }
+  .lang button.on { color: var(--ink); background: var(--paper); border-color: var(--paper); }
+
+  .hero { padding: 72px 0 48px; }
+  .kicker { font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); margin: 0 0 14px; }
+  h1 { font-family: var(--serif); font-size: clamp(38px, 6vw, 68px); line-height: 1.02; letter-spacing: -.02em; font-weight: 500; margin: 0 0 18px; max-width: 15ch; }
+  .lead { font-size: clamp(17px, 2.1vw, 21px); color: #d8d1c1; max-width: 62ch; margin: 0 0 30px; }
+  .lead em { color: var(--paper); font-style: normal; border-bottom: 2px solid var(--accent); }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px; text-decoration: none;
+    background: var(--paper); color: var(--ink); border-radius: 999px;
+    padding: 13px 24px; font-size: 14px; font-weight: 600; letter-spacing: .01em;
+  }
+  .btn.ghost { background: none; color: var(--paper); border: 1px solid var(--line); font-weight: 400; }
+  .btn:hover { transform: translateY(-1px); }
+
+  .shot { margin: 40px 0 0; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); background: #22201a; }
+  .shot img { display: block; width: 100%; height: auto; }
+
+  section { padding: 56px 0; border-top: 1px solid var(--line); }
+  h2 { font-family: var(--serif); font-size: clamp(24px, 3vw, 34px); font-weight: 500; letter-spacing: -.015em; margin: 0 0 22px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 26px; }
+  .card h3 { font-size: 13px; letter-spacing: .1em; text-transform: uppercase; margin: 0 0 8px; color: var(--muted); font-weight: 600; }
+  .card p { margin: 0; color: #cfc7b6; font-size: 14.5px; }
+  .shots2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 34px; }
+  .shots2 img { width: 100%; border-radius: 10px; border: 1px solid var(--line); display: block; }
+
+  .list { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px 24px; }
+  .list span { font-family: var(--serif); font-size: 19px; }
+  .list small { display: block; font-family: var(--sans); font-size: 11px; color: var(--muted); letter-spacing: .04em; }
+
+  footer { padding: 36px 0 56px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12.5px; display: flex; flex-wrap: wrap; gap: 18px; justify-content: space-between; }
+  footer a { color: var(--paper); text-decoration: none; border-bottom: 1px solid var(--line); }
+  [data-lang] { display: none; }
+  html[lang="fr"] [data-lang="fr"], html[lang="en"] [data-lang="en"] { display: block; }
+  span[data-lang] { display: none; }
+  html[lang="fr"] span[data-lang="fr"], html[lang="en"] span[data-lang="en"] { display: inline; }
+  @media (max-width: 640px) { .shots2 { grid-template-columns: 1fr; } .hero { padding: 44px 0 30px; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <a class="brand" href="../index.html">
+      <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+        <circle cx="16" cy="16" r="13"/><ellipse cx="16" cy="16" rx="5.5" ry="13"/><path d="M3.6 12.2h24.8M3.6 19.8h24.8"/>
+      </svg>
+      <strong>Imperator</strong>
+    </a>
+    <div class="lang">
+      <button type="button" data-set="fr" class="on">FR</button>
+      <button type="button" data-set="en">EN</button>
+    </div>
+  </header>
+
+  <div class="hero">
+    <p class="kicker" data-lang="fr">Atlas des souverainetés</p>
+    <p class="kicker" data-lang="en">Atlas of sovereignty</p>
+
+    <h1 data-lang="fr">Combien d'années chaque territoire a-t-il été français&nbsp;?</h1>
+    <h1 data-lang="en">How many years was each territory French?</h1>
+
+    <p class="lead" data-lang="fr">Douze atlas interactifs, <em>295 territoires</em>, un curseur temporel : la France de 843 à aujourd'hui, Rome jusqu'en 1453, l'Empire britannique, les Ottomans, les États-Unis… Chaque région est colorée selon le nombre d'années passées sous souveraineté étrangère.</p>
+    <p class="lead" data-lang="en">Twelve interactive atlases, <em>295 territories</em>, one time cursor: France from 843, Rome to 1453, the British Empire, the Ottomans, the United States… Every region is shaded by the number of years spent under foreign sovereignty.</p>
+
+    <div class="cta">
+      <a class="btn" href="../index.html" data-lang="fr">Ouvrir l'atlas →</a>
+      <a class="btn" href="../index.html" data-lang="en">Open the atlas →</a>
+      <a class="btn ghost" href="../index.html?pays=rome" data-lang="fr">Commencer par Rome</a>
+      <a class="btn ghost" href="../index.html?pays=rome" data-lang="en">Start with Rome</a>
+    </div>
+
+    <div class="shot"><img src="../screenshots/01-cumul.png" alt="Le monde français, toutes époques"></div>
+  </div>
+
+  <section>
+    <h2 data-lang="fr">Ce que fait l'atlas</h2>
+    <h2 data-lang="en">What the atlas does</h2>
+    <div class="grid">
+      <div class="card">
+        <h3 data-lang="fr">La durée comme mesure</h3><h3 data-lang="en">Duration as the measure</h3>
+        <p data-lang="fr">Pas une carte de fronte, mais une carte du temps : sept classes d'années, du comptoir tenu trois ans à la province romaine tenue quinze siècles.</p>
+        <p data-lang="en">Not a border map, but a map of time: seven classes of years, from a trading post held for three years to a Roman province held for fifteen centuries.</p>
+      </div>
+      <div class="card">
+        <h3 data-lang="fr">La chronologie jouable</h3><h3 data-lang="en">A playable timeline</h3>
+        <p data-lang="fr">Un curseur qui se ralentit là où l'histoire s'accélère. La carte se resserre sur le territoire au IXe siècle et s'ouvre au monde quand l'empire s'étend.</p>
+        <p data-lang="en">A cursor that slows where history speeds up. The map closes in on the territory in the 9th century and opens to the world as the empire grows.</p>
+      </div>
+      <div class="card">
+        <h3 data-lang="fr">Des découpages fins</h3><h3 data-lang="en">Fine-grained regions</h3>
+        <p data-lang="fr">La France par provinces, les États-Unis par acquisitions, l'Empire ottoman par vilayets, Rome par provinces — et une note critique par fiche.</p>
+        <p data-lang="en">France by province, the United States by purchase, the Ottoman Empire by vilayet, Rome by province — with a critical note for every territory.</p>
+      </div>
+    </div>
+
+    <div class="shots2">
+      <img src="../screenshots/10-rome.png" alt="Rome en 117">
+      <img src="../screenshots/07-royaume-uni.png" alt="Empire britannique en 1920">
+    </div>
+  </section>
+
+  <section>
+    <h2 data-lang="fr">Les douze atlas</h2>
+    <h2 data-lang="en">The twelve atlases</h2>
+    <div class="list">
+      <a href="../index.html?pays=france"><span data-lang="fr">France</span><span data-lang="en">France</span><small>843 – 2026 · 73</small></a>
+      <a href="../index.html?pays=rome"><span data-lang="fr">Rome</span><span data-lang="en">Rome</span><small>509 av. J.-C. – 1453 · 17</small></a>
+      <a href="../index.html?pays=ottoman"><span data-lang="fr">Ottomans</span><span data-lang="en">Ottomans</span><small>1299 – 1922 · 24</small></a>
+      <a href="../index.html?pays=italie"><span data-lang="fr">Italie</span><span data-lang="en">Italy</span><small>1882 – 1947 · 8</small></a>
+      <a href="../index.html?pays=espagne"><span data-lang="fr">Espagne</span><span data-lang="en">Spain</span><small>1492 – 1898 · 28</small></a>
+      <a href="../index.html?pays=portugal"><span data-lang="fr">Portugal</span><span data-lang="en">Portugal</span><small>1415 – 1999 · 14</small></a>
+      <a href="../index.html?pays=royaume-uni"><span data-lang="fr">Royaume-Uni</span><span data-lang="en">United Kingdom</span><small>1607 – 1997 · 46</small></a>
+      <a href="../index.html?pays=pays-bas"><span data-lang="fr">Pays-Bas</span><span data-lang="en">Netherlands</span><small>1602 – 1975 · 12</small></a>
+      <a href="../index.html?pays=allemagne"><span data-lang="fr">Allemagne</span><span data-lang="en">Germany</span><small>1871 – 1945 · 23</small></a>
+      <a href="../index.html?pays=russie"><span data-lang="fr">Russie</span><span data-lang="en">Russia</span><small>1552 – 1991 · 18</small></a>
+      <a href="../index.html?pays=japon"><span data-lang="fr">Japon</span><span data-lang="en">Japan</span><small>1895 – 1945 · 11</small></a>
+      <a href="../index.html?pays=usa"><span data-lang="fr">États-Unis</span><span data-lang="en">United States</span><small>1776 – 2026 · 21</small></a>
+    </div>
+  </section>
+
+  <footer>
+    <span>Imperator · <span id="ver">2026.11.15</span></span>
+    <span>
+      <a href="https://ko-fi.com/pouark" target="_blank" rel="noopener">Ko-fi</a> ·
+      <a href="../index.html" data-lang="fr">Atlas</a><a href="../index.html" data-lang="en">Atlas</a>
+    </span>
+  </footer>
+</div>
+
+<script>
+  (function () {
+    const html = document.documentElement;
+    const saved = localStorage.getItem("imperator-lang");
+    const lang = saved || ((navigator.language || "fr").toLowerCase().startsWith("fr") ? "fr" : "en");
+    setLang(lang);
+    document.querySelectorAll(".lang button").forEach((b) =>
+      b.addEventListener("click", () => setLang(b.dataset.set))
+    );
+    function setLang(l) {
+      html.lang = l;
+      localStorage.setItem("imperator-lang", l);
+      document.querySelectorAll(".lang button").forEach((b) => b.classList.toggle("on", b.dataset.set === l));
+      document.title = l === "fr" ? "Imperator — atlas des souverainetés" : "Imperator — atlas of sovereignty";
+    }
+  })();
+</script>
+</body>
+</html>

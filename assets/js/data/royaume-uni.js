@@ -14,6 +14,7 @@ export const royaumeUni = {
   defaultYear: 2026,
   origin: 1607,
   adj: { one: "britannique", many: "britanniques" },
+  palette: { h: 348, s: 46 },
   sovereignty: "britannique",
   binEdges: [50, 100, 150, 200, 250, 300, Infinity],
   hero: {
@@ -119,7 +120,11 @@ export const royaumeUni = {
       short: "13 colonies",
       group: "amerique",
       kind: "Colonies (1607-1783)",
-      geo: ["usa"],
+      geo: [
+        "us-connecticut", "us-delaware", "us-georgia", "us-maryland", "us-massachusetts",
+        "us-new-hampshire", "us-new-jersey", "us-new-york", "us-north-carolina",
+        "us-pennsylvania", "us-rhode-island", "us-south-carolina", "us-virginia",
+      ],
       periods: [[1607, 1783]],
       label: [-78, 38],
       note: "De Jamestown (1607) à l'indépendance (1783) : le premier empire continental, perdu presque entier.",

@@ -5,6 +5,8 @@
    ========================================================================== */
 
 :root {
+  --country: #6140aa;
+  --country-soft: #ece7f6;
   --paper: #f5f2ea;
   --paper-2: #fbf9f3;
   --card: #fffdf8;
@@ -243,12 +245,11 @@ button { font: inherit; color: inherit; }
   cursor: pointer;
 }
 .terr.dim path { opacity: .28; }
-.terr.sel path { stroke: var(--accent); stroke-width: 2px; paint-order: stroke; vector-effect: non-scaling-stroke; }
+.terr.sel path { stroke: var(--country, var(--accent)); stroke-width: 2px; paint-order: stroke; vector-effect: non-scaling-stroke; }
 
 .marker { pointer-events: none; }
 .marker circle { pointer-events: auto; cursor: pointer; }
 .marker circle {
-  fill: var(--h5);
   stroke: var(--paper-2);
   stroke-width: 1.1px;
   transition: fill .35s;
@@ -709,8 +710,8 @@ button { font: inherit; color: inherit; }
 
 .track-wrap { position: relative; min-width: 0; }
 .spark { width: 100%; height: 44px; display: block; margin-bottom: 2px; }
-.spark .area { fill: rgba(97, 64, 170, .18); }
-.spark .line { fill: none; stroke: rgba(78, 48, 148, .55); stroke-width: 1; }
+.spark .area { fill: var(--country-soft); }
+.spark .line { fill: none; stroke: var(--country); stroke-opacity: .5; stroke-width: 1; }
 .spark .head { stroke: var(--accent); stroke-width: 1.2; stroke-dasharray: 2 2; }
 
 .ticks { position: absolute; left: 0; right: 0; top: 30px; height: 12px; pointer-events: none; }
@@ -868,6 +869,14 @@ input[type="range"]::-moz-range-thumb {
 .sheet-body p { font-size: 13.5px; line-height: 1.6; color: var(--ink-soft); margin: 0 0 8px; }
 .sheet-body .lead { font-family: var(--serif); font-size: 17px; line-height: 1.5; color: var(--ink); }
 .related { display: flex; flex-wrap: wrap; gap: 8px; }
+.sheet-body .support {
+  margin-top: 24px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line-soft);
+  font-size: 11.5px;
+  color: var(--muted);
+}
+.sheet-body .support a { color: var(--ink-soft); text-underline-offset: 3px; }
 
 .sheet-body .aside-note {
   border-left: 2px solid var(--line);
@@ -878,7 +887,9 @@ input[type="range"]::-moz-range-thumb {
 
 /* ------------------------------------------------------------- responsive */
 @media (max-width: 1180px) {
-  :root { --panel-w: 340px; }
+  :root {
+  --country: #6140aa;
+  --country-soft: #ece7f6; --panel-w: 340px; }
   .countries { gap: 0; }
 }
 

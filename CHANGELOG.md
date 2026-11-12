@@ -5,6 +5,19 @@ modification ; la version courante est le premier titre ci-dessous.
 
 ---
 
+## v2026.11.15 — 2026-11-12
+
+- **Une couleur par empire** : chaque atlas a sa teinte (violet pour la France, brique pour Rome,
+  sarcelle pour les Ottomans, azur pour l'Italie, or pour l'Espagne, vert pour le Portugal, bordeaux
+  pour le Royaume-Uni, orange pour les Pays-Bas, graphite pour l'Allemagne, malachite pour la Russie,
+  vermillon pour le Japon, bleu marine pour les États-Unis). La clarté continue de coder la durée.
+- La sélection sur la carte et la frise prennent la teinte du pays.
+- Les Treize colonies britanniques sont dessinées par leurs États réels, plus par tout le territoire
+  américain.
+- Page promotionnelle bilingue `store/index.html` (détection de langue + bascule FR/EN).
+- Lien de soutien Ko-fi dans la fenêtre « Méthode ».
+- Version affichée dans le bandeau des deux README.
+
 ## v2026.11.14 — 2026-11-12
 
 - **Lecture stabilisée** : la courbe de rythme est lissée sur ±22 ans. La vitesse varie par époques,

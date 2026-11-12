@@ -14,6 +14,7 @@ export const ottoman = {
   defaultYear: 2026,
   origin: 1299,
   adj: { one: "ottoman", many: "ottomans" },
+  palette: { h: 174, s: 38 },
   sovereignty: "ottomane",
   binEdges: [100, 200, 300, 400, 500, 600, Infinity],
   hero: {

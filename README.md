@@ -4,6 +4,8 @@
 
 # Imperator — Le monde français
 
+**Version 2026.11.15**
+
 **Un planisphère interactif : combien d'années chaque territoire du monde a-t-il passé sous
 souveraineté française ?** **Douze atlas en ligne** : France, États-Unis, Royaume-Uni, Espagne, Portugal, Russie, Pays-Bas,
 Empire ottoman, Allemagne, Italie, Japon, Rome — 295 territoires au total, un curseur temporel et

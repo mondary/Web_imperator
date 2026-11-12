@@ -70,6 +70,7 @@ export const france = {
   defaultYear: 2026,
   origin: 843,
   adj: { one: "français", many: "français" },
+  palette: { h: 262, s: 46 },
   hero: {
     headline: "843 – aujourd'hui",
     note: "La date de 843 (traité de Verdun) marque la naissance de la Francie occidentale, matrice du royaume de France. C'est elle qui sert de point de départ au décompte de la métropole.",

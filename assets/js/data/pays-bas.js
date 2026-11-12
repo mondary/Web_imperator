@@ -14,6 +14,7 @@ export const paysBas = {
   defaultYear: 2026,
   origin: 1602,
   adj: { one: "néerlandais", many: "néerlandais" },
+  palette: { h: 26, s: 72 },
   sovereignty: "néerlandaise",
   binEdges: [50, 100, 150, 200, 250, 300, Infinity],
   hero: {
