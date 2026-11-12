@@ -5,6 +5,14 @@ modification ; la version courante est le premier titre ci-dessous.
 
 ---
 
+## v2026.11.2 — 2026-11-12
+
+- Légende déplacée en bas à droite pour dégager l'Asie ; bandeau compact sur mobile.
+- En chronologie, les libellés des territoires non tenus à la date affichée disparaissent.
+- Libellés de carte agrandis progressivement avec le zoom ; traits à épaisseur constante.
+- Frise des fiches recadrée sur la première prise de possession.
+- Panneau plus compact sur petit écran pour laisser respirer la carte.
+
 ## v2026.11.1 — 2026-11-12
 
 Première version publique.

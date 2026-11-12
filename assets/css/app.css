@@ -296,7 +296,7 @@ button { font: inherit; color: inherit; }
 /* légende */
 .legend {
   position: absolute;
-  top: 14px;
+  bottom: 14px;
   right: 14px;
   width: 208px;
   background: rgba(251, 249, 243, .93);
@@ -334,8 +334,8 @@ button { font: inherit; color: inherit; }
 
 .hint {
   position: absolute;
-  bottom: 18px;
-  right: 16px;
+  bottom: 22px;
+  left: 60px;
   font-size: 10px;
   letter-spacing: .04em;
   color: var(--muted);
@@ -878,9 +878,10 @@ input[type="range"]::-moz-range-thumb {
 
 @media (max-width: 620px) {
   .countries { display: none; }
+  .panel { max-height: 38vh; }
   .modes .mode { padding: 5px 10px; font-size: 11px; }
   .stage-title h1 { font-size: 20px; }
-  .legend { top: 6px; right: 8px; left: 8px; width: auto; padding: 6px 8px 7px; }
+  .legend { top: 6px; bottom: auto; right: 8px; left: 8px; width: auto; padding: 6px 8px 7px; }
   .legend h2 { font-size: 7.5px; margin-bottom: 4px; letter-spacing: .1em; }
   .legend ul { display: flex; gap: 3px; }
   .legend li { flex: 1; min-width: 0; }
