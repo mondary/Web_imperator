@@ -52,6 +52,7 @@ const state = {
   query: "",
   playing: false,
   zoom: { k: 1, x: 0, y: 0 },
+  playPos: 0,
   focus: null,
   autoFrame: true,
   frameTarget: null,
@@ -67,6 +68,7 @@ let labelNodes = new Map();
 let markerNodes = new Map();
 let terrNodes = new Map();
 let rafId = null;
+let playCurve = null;
 
 /* ---------------------------------------------------------------- histoires */
 
@@ -919,6 +921,7 @@ function wireTimeline() {
   slider.addEventListener("input", () => {
     if (state.mode !== "date") setMode("date", false);
     state.autoFrame = true;
+    state.playPos = progressOfYear(Number(slider.value));
     setYear(Number(slider.value));
   });
 
@@ -940,6 +943,7 @@ function wireTimeline() {
     phases.appendChild(b);
   }
 
+  buildPlaybackCurve();
   buildSpark();
   buildTicks();
 }
@@ -1040,11 +1044,64 @@ function syncModeUi() {
 function setMode(mode, announce = true) {
   state.mode = mode;
   syncModeUi();
-  document.getElementById("stage-title").textContent =
-    mode === "date" ? `État du monde en ${formatYear(state.year)}` : `${ds.hero.headline}`;
   if (mode === "cumul") state.year = ds.endYear;
   if (announce) applyState();
   else applyState();
+}
+
+/* --------------------------------------------------- lecture accélérée
+   Le temps de lecture n'est pas proportionnel aux années : chaque année
+   coûte d'autant plus cher qu'il s'y passe quelque chose. Les siècles creux
+   défilent, les dates charnières s'attardent. */
+
+const PLAY_MS = 26000;
+
+function buildPlaybackCurve() {
+  const n = ds.endYear - ds.startYear + 1;
+  const activity = new Float64Array(n);
+
+  for (const t of territories) {
+    if (t.antecedent) continue;
+    for (const [a, b] of t.periods) {
+      for (const pivot of [a, b]) {
+        for (let d = -2; d <= 2; d++) {
+          const i = pivot - ds.startYear + d;
+          if (i >= 0 && i < n) activity[i] += d === 0 ? 1 : 0.45;
+        }
+      }
+    }
+  }
+
+  const cum = new Float64Array(n + 1);
+  for (let i = 0; i < n; i++) {
+    // 0.15 = traversée rapide d'un siècle creux ; 3.6 = poids d'une année chargée
+    cum[i + 1] = cum[i] + 0.15 + 3.6 * Math.sqrt(Math.min(activity[i], 10));
+  }
+  playCurve = { n, cum, total: cum[n] };
+}
+
+function yearAtProgress(p) {
+  if (!playCurve) return ds.startYear + p * (ds.endYear - ds.startYear);
+  const target = clamp(p, 0, 1) * playCurve.total;
+  const { cum } = playCurve;
+  let lo = 0;
+  let hi = cum.length - 1;
+  while (lo < hi - 1) {
+    const mid = (lo + hi) >> 1;
+    if (cum[mid] <= target) lo = mid;
+    else hi = mid;
+  }
+  const span = cum[hi] - cum[lo] || 1;
+  return ds.startYear + lo + (target - cum[lo]) / span;
+}
+
+function progressOfYear(year) {
+  if (!playCurve) return 0;
+  const i = clamp(Math.floor(year - ds.startYear), 0, playCurve.n);
+  const frac = clamp(year - (ds.startYear + i), 0, 1);
+  const next = Math.min(i + 1, playCurve.n);
+  const span = playCurve.cum[next] - playCurve.cum[i];
+  return (playCurve.cum[i] + frac * span) / playCurve.total;
 }
 
 function togglePlay() {
@@ -1054,7 +1111,13 @@ function togglePlay() {
   if (state.playing) {
     state.autoFrame = true;
     setMode("date");
-    if (state.year >= ds.endYear) state.year = ds.startYear;
+    if (state.year >= ds.endYear) {
+      state.year = ds.startYear;
+      state.playPos = 0;
+      applyState();
+    } else {
+      state.playPos = progressOfYear(state.year);
+    }
     last = null;
     rafId = requestAnimationFrame(tick);
   } else if (rafId) {
@@ -1071,16 +1134,16 @@ function tick(ts) {
   if (!(dt > 0)) dt = 16; // horloge figée (onglet en arrière-plan, rendu headless)
   dt = Math.min(64, dt);
   last = ts;
-  const yearsPerSecond = 55;
-  const next = state.year + (dt / 1000) * yearsPerSecond;
-  if (next >= ds.endYear) {
+
+  state.playPos = (state.playPos || 0) + dt / PLAY_MS;
+  if (state.playPos >= 1) {
     setYear(ds.endYear);
     state.playing = false;
     document.getElementById("play").classList.remove("is-playing");
     rafId = null;
     return;
   }
-  setYear(next);
+  setYear(yearAtProgress(state.playPos));
   rafId = requestAnimationFrame(tick);
 }
 

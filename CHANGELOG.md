@@ -5,6 +5,14 @@ modification ; la version courante est le premier titre ci-dessous.
 
 ---
 
+## v2026.11.6 — 2026-11-12
+
+- **Lecture à vitesse variable** : le temps de lecture n'est plus proportionnel aux années mais à
+  l'activité. Les siècles creux (843-1500) défilent en 3 s, la période 1500-1800 prend 9 s, et
+  1830-1962 — conquêtes, protectorats, indépendances — ralentit à 10 s, avec une pause marquée
+  sur 1960. Courbe calculée à partir des dates de début et de fin de chaque territoire.
+- Le curseur manuel recale la position de lecture ; reprise en cours de route sans saut.
+
 ## v2026.11.5 — 2026-11-12
 
 - Infobulle de la liste ancrée sur le centre réel du territoire (moyenne de tous ses polygones),
